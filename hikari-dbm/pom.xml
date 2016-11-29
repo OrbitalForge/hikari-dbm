@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.orbitalforge</groupId>
+	<artifactId>hikari-dbm</artifactId>
+	<packaging>pom</packaging>
+	<name>hikari-dbm</name>
+
+	<properties>
+		<slf4j.version>1.7.21</slf4j.version>
+		<hikaricp.version>2.5.1</hikaricp.version>
+		<junit.version>3.8.1</junit.version>
+		<h2.version>1.4.193</h2.version>
+		<commons-io.version>2.5</commons-io.version>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<buildDirectory>${project.basedir}/hikari-dbm/target</buildDirectory>
+	</properties>
+
+	<version>0.0.1-SNAPSHOT</version>
+
+	<contributors>
+		<contributor>
+			<name>Travis Sharp</name>
+			<email>furiousscissors@gmail.com</email>
+		</contributor>
+	</contributors>
+
+	<licenses>
+		<license>
+			<name>Apache License 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+
+	<modules>
+		<module>hikari-dbm-core</module>
+	</modules>
+</project>
