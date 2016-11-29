@@ -26,9 +26,10 @@ public class SchemaManager {
 	}
 	
 	public void createTable(TableDefinition table) throws HikariDbmException, IOException, SQLException {
-		Writer writer = table.buildCreationWriter(dbService.getPlatform(), new StringWriter());
+		Writer writer = dbService.getPlatform().buildTableCreation(table, new StringWriter());
 		Connection connection = dbService.getDataSource().getConnection();
 		Statement statement = connection.createStatement();
+		System.out.println(writer.toString());
 		statement.execute(writer.toString());
 		System.out.println(writer.toString());
 	}

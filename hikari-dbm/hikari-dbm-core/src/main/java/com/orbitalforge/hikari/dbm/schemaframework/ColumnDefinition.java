@@ -55,27 +55,4 @@ public class ColumnDefinition extends DatabaseObjectDefinition {
 	
 	public int getScale() { return getProperty("scale", 4); }
 	public void setScale(int value) { setProperty("scale", value); }
-	
-	@Override
-	public Writer buildCreationWriter(AbstractDbPlatform platform, Writer writer) throws HikariDbmException {
-		try {
-			writer.write(platform.escapeIdentifier(getName()));
-			platform.buildDbType(this, writer);
-			if(getIsNullable()) writer.write(" NOT NULL");
-			if(getIsAutoIncrement()) platform.buildAutoIncrement(this, writer);
-			if(getIsPrimaryKey()) writer.write(" PRIMARY KEY");
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return writer;
-	}
-
-	@Override
-	public Writer buildDeletionWriter(AbstractDbPlatform platform, Writer writer) {
-		// TODO Auto-generated method stub
-		return writer;
-	}
 }

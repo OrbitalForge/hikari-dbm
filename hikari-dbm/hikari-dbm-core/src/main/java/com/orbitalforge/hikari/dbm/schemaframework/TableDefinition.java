@@ -12,7 +12,9 @@ import com.orbitalforge.hikari.dbm.platform.AbstractDbPlatform;
 
 public class TableDefinition extends DatabaseObjectDefinition {
 	private final Map<String, ColumnDefinition> columns = new LinkedHashMap<String, ColumnDefinition>();
+	private final Map<String, ForeignKeyConstraint> foriegnKeys = new LinkedHashMap<String, ForeignKeyConstraint>();
 	
+	/* Constructors */
 	public TableDefinition(Map<String, Object> data) {
 		if(data.containsKey("table_name")) setName((String)data.get("table_name"));
 		if(data.containsKey("table_schema")) setSchema((String)data.get("table_schema"));
@@ -21,8 +23,14 @@ public class TableDefinition extends DatabaseObjectDefinition {
 	public TableDefinition() {
 		super();
 	}
+	/* ------------- */
 	
-	public TableDefinition removeColumn(String column) {
+	/* Properties */
+	public String getSchema() { return getProperty("schema", ""); }
+	public void setSchema(String value) { setProperty("schema", value); }
+	
+    /* Column Methods */
+    public TableDefinition removeColumn(String column) {
 		// TODO: Track changes and persist to database.
 		columns.remove(column);
 		return this;
@@ -54,40 +62,18 @@ public class TableDefinition extends DatabaseObjectDefinition {
 	public ColumnDefinition getColumn(String key) {
 		return columns.get(key);
 	}
-
-	@Override
-	public Writer buildCreationWriter(AbstractDbPlatform platform, Writer writer) throws HikariDbmException  {
-		// TODO Auto-generated method stub
-		try {
-			writer.write("CREATE TABLE ");
-			// TODO: Add schema prefix ...
-			writer.write(platform.joinIdentifiers(this.getName()));
-			writer.write(" ( ");
-			
-			ColumnDefinition[] columnDefs = new ColumnDefinition[this.columns.size()];
-			columns.values().toArray(columnDefs);
-			String[] columnValues = new String[columnDefs.length];
-			
-			for(int i = 0; i < columnDefs.length; i++) {
-				columnValues[i] = columnDefs[i].buildCreationWriter(platform, new StringWriter()).toString();
-			}
-			
-			writer.write(Helpers.join(", ", columnValues));
-			
-			writer.write(" );");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return writer;
-	}
-
-	@Override
-	public Writer buildDeletionWriter(AbstractDbPlatform platform, Writer writer) {
-		// TODO Auto-generated method stub
-		return writer;
-	}
 	
-	public String getSchema() { return getProperty("schema", ""); }
-	public void setSchema(String value) { setProperty("schema", value); }
+	/* Foriegn Key Methods */
+	public void addForeignKeyConstraint(ForeignKeyConstraint constraint) {
+		if(foriegnKeys.containsKey(constraint.getName())) {
+			throw new RuntimeException("Foriegn Key Exists");
+		}
+		
+		foriegnKeys.put(constraint.getName(), constraint);
+    }
+	
+    public void addForeignKeyConstraint(String name, String sourceField, String targetField, String targetTable) {
+        ForeignKeyConstraint foreignKey = new ForeignKeyConstraint(name, sourceField, targetField, targetTable);
+        addForeignKeyConstraint(foreignKey);
+    }
 }
