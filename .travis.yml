@@ -7,4 +7,4 @@ jdk:
 #  - oraclejdk7
   - oraclejdk8
 
-script: mvn clean verify
+script: mvn clean verify -f hikari-dbm/pom.xml
