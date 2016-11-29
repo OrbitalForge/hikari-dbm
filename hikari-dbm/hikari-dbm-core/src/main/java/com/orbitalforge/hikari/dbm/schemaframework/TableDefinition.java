@@ -6,6 +6,7 @@ import java.io.Writer;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.orbitalforge.hikari.dbm.db.Helpers;
 import com.orbitalforge.hikari.dbm.exception.HikariDbmException;
 import com.orbitalforge.hikari.dbm.platform.AbstractDbPlatform;
 
@@ -71,7 +72,7 @@ public class TableDefinition extends DatabaseObjectDefinition {
 				columnValues[i] = columnDefs[i].buildCreationWriter(platform, new StringWriter()).toString();
 			}
 			
-			writer.write(String.join(", ", columnValues));
+			writer.write(Helpers.join(", ", columnValues));
 			
 			writer.write(" );");
 		} catch (IOException e) {

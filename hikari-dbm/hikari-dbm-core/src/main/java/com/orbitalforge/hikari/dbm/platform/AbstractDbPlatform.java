@@ -6,6 +6,7 @@ import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.orbitalforge.hikari.dbm.db.Helpers;
 import com.orbitalforge.hikari.dbm.exception.DbTypeNotMappedException;
 import com.orbitalforge.hikari.dbm.schemaframework.ColumnDefinition;
 
@@ -24,7 +25,7 @@ public abstract class AbstractDbPlatform {
 			escaped[i] = escapeIdentifier(identifiers[i]);
 		}
 		
-		return String.join(".", escaped);
+		return Helpers.join(".", escaped);
 	}
 	
 	public AbstractDbPlatform() {
