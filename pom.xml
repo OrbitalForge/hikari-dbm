@@ -13,6 +13,8 @@
 		<junit.version>3.8.1</junit.version>
 		<h2.version>1.4.193</h2.version>
 		<commons-io.version>2.5</commons-io.version>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
 	<version>${hikari-dbm.version}</version>
@@ -20,9 +22,7 @@
 	<contributors>
 		<contributor>
 			<name>Travis Sharp</name>
-			<organization>Orbital Forge</organization>
-			<organizationUrl>http://www.orbitalforge.com</organizationUrl>
-			<email>travis.sharp@orbitalforge.com</email>
+			<email>furiousscissors@gmail.com</email>
 		</contributor>
 	</contributors>
 
@@ -54,7 +54,7 @@
 			<artifactId>HikariCP</artifactId>
 			<version>${hikaricp.version}</version>
 		</dependency>
-		
+
 		<!-- Misc -->
 		<!-- TODO: Remove this and replace with a simple Stream to String function -->
 		<dependency>
@@ -62,7 +62,7 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.5</version>
 		</dependency>
-		
+
 		<!-- Testing -->
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -77,4 +77,18 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.6.0</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
