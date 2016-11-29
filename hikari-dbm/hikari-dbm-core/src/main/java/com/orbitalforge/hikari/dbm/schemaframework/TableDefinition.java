@@ -12,7 +12,7 @@ import com.orbitalforge.hikari.dbm.platform.AbstractDbPlatform;
 
 public class TableDefinition extends DatabaseObjectDefinition {
 	private final Map<String, ColumnDefinition> columns = new LinkedHashMap<String, ColumnDefinition>();
-	private final Map<String, ForeignKeyConstraint> foriegnKeys = new LinkedHashMap<String, ForeignKeyConstraint>();
+	private final Map<String, Constraint> constraints = new LinkedHashMap<String, Constraint>();
 	
 	/* Constructors */
 	public TableDefinition(Map<String, Object> data) {
@@ -63,17 +63,36 @@ public class TableDefinition extends DatabaseObjectDefinition {
 		return columns.get(key);
 	}
 	
-	/* Foriegn Key Methods */
-	public void addForeignKeyConstraint(ForeignKeyConstraint constraint) {
-		if(foriegnKeys.containsKey(constraint.getName())) {
-			throw new RuntimeException("Foriegn Key Exists");
+	public void addConstraint(Constraint constraint) {
+		if(constraints.containsKey(constraint.getConstraintIdentifier())) {
+			throw new RuntimeException(constraint.getConstraintIdentifier() + " Exists");
 		}
 		
-		foriegnKeys.put(constraint.getName(), constraint);
+		// Naively assumes schema and table name are already set.
+		constraint.setSchema(getSchema());
+		constraint.setTable(getName());
+		constraints.put(constraint.getConstraintIdentifier(), constraint);
     }
 	
-    public void addForeignKeyConstraint(String name, String sourceField, String targetField, String targetTable) {
-        ForeignKeyConstraint foreignKey = new ForeignKeyConstraint(name, sourceField, targetField, targetTable);
-        addForeignKeyConstraint(foreignKey);
+	public Constraint[] getConstraints() {
+		Constraint[] results = new Constraint[constraints.size()];
+		constraints.values().toArray(results);
+		return results;
+	}
+	
+	/* Foriegn Key Methods */
+    public void addForeignKeyConstraint(
+    		String name, 
+    		String sourceSchema,
+    		String sourceTable,
+    		String sourceField,
+    		String targetSchema,
+    		String targetField, 
+    		String targetTable) {
+        ForeignKeyConstraint foreignKey = new ForeignKeyConstraint(
+        		name, 
+        		sourceSchema, sourceTable, sourceField, 
+        		targetSchema, targetField, targetTable);
+        addConstraint(foreignKey);
     }
 }

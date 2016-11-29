@@ -13,8 +13,7 @@ public class H2Platform extends AbstractDbPlatform {
 	}
 
 	@Override
-	public void buildAutoIncrement(ColumnDefinition columnDefinition, Writer writer)
-			throws IOException {
+	public void buildAutoIncrement(ColumnDefinition columnDefinition, Writer writer) throws IOException {
 		writer.write(" AUTO_INCREMENT");
 	}
 }

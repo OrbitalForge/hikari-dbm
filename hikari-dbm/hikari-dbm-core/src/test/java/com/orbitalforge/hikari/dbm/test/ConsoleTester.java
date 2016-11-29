@@ -9,6 +9,7 @@ import com.orbitalforge.hikari.dbm.exception.HikariDbmException;
 import com.orbitalforge.hikari.dbm.schemaframework.ColumnDefinition;
 import com.orbitalforge.hikari.dbm.schemaframework.SchemaManager;
 import com.orbitalforge.hikari.dbm.schemaframework.TableDefinition;
+import com.orbitalforge.hikari.dbm.schemaframework.UniqueConstraint;
 
 public class ConsoleTester {
 
@@ -43,8 +44,9 @@ public class ConsoleTester {
 		def1.setIsAutoIncrement(true);
 		
 		ColumnDefinition def2 = new ColumnDefinition();
-		def2.setDbType(Types.NVARCHAR);
+		def2.setDbType(Types.VARCHAR);
 		def2.setName("kubo");
+		def2.setLength(767);
 		
 		ColumnDefinition def3 = new ColumnDefinition();
 		def3.setName("monies");
@@ -53,6 +55,11 @@ public class ConsoleTester {
 		table.addColumn(def1);
 		table.addColumn(def2);
 		table.addColumn(def3);
+		
+		UniqueConstraint uq = new UniqueConstraint();
+		uq.setName("SAMPLE");
+		uq.setFields("kubo");
+		table.addConstraint(uq);
 		
 		return table;
 	}

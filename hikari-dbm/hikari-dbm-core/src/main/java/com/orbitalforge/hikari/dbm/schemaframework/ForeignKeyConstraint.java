@@ -1,25 +1,34 @@
 package com.orbitalforge.hikari.dbm.schemaframework;
 
-import java.io.IOException;
-import java.io.Writer;
-
-import com.orbitalforge.hikari.dbm.exception.HikariDbmException;
-import com.orbitalforge.hikari.dbm.platform.AbstractDbPlatform;
-
 public class ForeignKeyConstraint extends Constraint {
-	public ForeignKeyConstraint(String name, String sourceField, String targetTable, String targetField) {
+	public static final String CONSTRAINT_TYPE = "FK";
+
+	@Override
+	public String getConstraintType() {
+		return CONSTRAINT_TYPE;
+	}
+	
+	public ForeignKeyConstraint(
+			String name, 
+			String sourceSchema, String sourceTable, String sourceField, 
+			String targetSchema, String targetTable, String targetField) {
 		setName(name);
-		setSourceField(sourceField);
+		setSchema(sourceSchema);
+		setTable(sourceTable);
+		setField(sourceField);
 		setTargetTable(targetTable);
 		setTargetField(targetField);
 	}
 	
-	public String getSourceField() { return getProperty("sourceField", ""); }
-	public void setSourceField(String value) { setProperty("sourceField", value); }
+	public String getField() { return getProperty("sourceField", ""); }
+	public void setField(String value) { setProperty("sourceField", value); }
 	
 	public String getTargetTable() { return getProperty("targetTable", ""); }
 	public void setTargetTable(String value) { setProperty("targetTable", value); }
 	
 	public String getTargetField() { return getProperty("targetField", ""); }
 	public void setTargetField(String value) { setProperty("targetField", value); }
+	
+	public String getTargetSchema() { return getProperty("targetSchema", ""); }
+	public void setTargetSchema(String value) { setProperty("targetSchema", value); }
 }

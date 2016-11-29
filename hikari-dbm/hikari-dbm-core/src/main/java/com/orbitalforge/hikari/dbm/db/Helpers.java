@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public class Helpers {
 	private Helpers() { }
@@ -31,6 +32,20 @@ public class Helpers {
 		return buffer.toString();
 	}
 	
+	public static String join(String delimiter, List<String> values) {
+		boolean and = false;
+		StringBuffer buffer = new StringBuffer();
+		
+		for(String v : values) {
+			if(and) { buffer.append(delimiter); }
+			else { and = true; }
+			
+			buffer.append(v);
+		}
+		
+		return buffer.toString();
+	}
+		
 	public static String[] getColumns(ResultSet resultSet) throws SQLException {
 		ResultSetMetaData metadata = resultSet.getMetaData();
 		String[] results = new String[metadata.getColumnCount()];
