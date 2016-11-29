@@ -11,6 +11,7 @@ import com.orbitalforge.hikari.dbm.db.Helpers;
 import com.orbitalforge.hikari.dbm.exception.DbTypeNotMappedException;
 import com.orbitalforge.hikari.dbm.exception.HikariDbmException;
 import com.orbitalforge.hikari.dbm.schemaframework.ColumnDefinition;
+import com.orbitalforge.hikari.dbm.schemaframework.Constraint;
 import com.orbitalforge.hikari.dbm.schemaframework.TableDefinition;
 
 public abstract class AbstractDbPlatform {
@@ -36,8 +37,14 @@ public abstract class AbstractDbPlatform {
 		this.setup();
 	}
 
+	/**
+	 * This expects that DBTypes and their respective text can be mapped 1-1
+	 * @param dbType
+	 * @param type
+	 */
 	protected void registerColumnType(int dbType, String type) {
 		this.columnTypeMap.put(dbType, type);
+		// this.reverseColumnTypeMap.put(type, dbType);
 	}
 	
 	private void internalSetup() {
@@ -74,11 +81,7 @@ public abstract class AbstractDbPlatform {
 		registerColumnType( Types.NCLOB, "nclob" );
 	}
 	
-	public abstract void setup();
-	
-	public String getColumnType(Types type) {
-		return this.columnTypeMap.get(type);
-	}
+	protected abstract void setup();
 	
 	public String getColumnType(int type) {
 		return this.columnTypeMap.get(type);
@@ -93,7 +96,7 @@ public abstract class AbstractDbPlatform {
 		return template.replaceAll(param, value);
 	}
 		
-	public void buildDbType(ColumnDefinition column, Writer writer) throws DbTypeNotMappedException, IOException {
+	protected void writeDbType(ColumnDefinition column, Writer writer) throws DbTypeNotMappedException, IOException {
 		String typeTemplate = getColumnType(column.getDbType());
 		if(typeTemplate == null) throw new DbTypeNotMappedException();
 		
@@ -105,11 +108,11 @@ public abstract class AbstractDbPlatform {
 		writer.write(typeTemplate);
 	}
 
-	public abstract void buildAutoIncrement(ColumnDefinition columnDefinition, Writer writer) throws IOException;
+	protected abstract void buildAutoIncrement(ColumnDefinition columnDefinition, Writer writer) throws IOException;
 	
-	private Writer buildColumnCreation(ColumnDefinition column, Writer writer) throws HikariDbmException, IOException {
+	private Writer writeColumn(ColumnDefinition column, Writer writer) throws HikariDbmException, IOException {
 		writer.write(this.escapeIdentifier(column.getName()));
-		this.buildDbType(column, writer);
+		writeDbType(column, writer);
 		if(column.getIsNullable()) writer.write(" NOT NULL");
 		if(column.getIsAutoIncrement()) this.buildAutoIncrement(column, writer);
 		if(column.getIsPrimaryKey()) writer.write(" PRIMARY KEY");
@@ -117,24 +120,30 @@ public abstract class AbstractDbPlatform {
 		return writer;
 	}
 	
-	public Writer buildTableCreation(TableDefinition table, Writer writer) throws HikariDbmException, IOException {
+	public Writer writeTable(TableDefinition table, Writer writer) throws HikariDbmException, IOException {
+			String newLine = System.getProperty("line.separator");
 			writer.write("CREATE TABLE ");
 			// TODO: Add schema prefix ...
 			writer.write(joinIdentifiers(table.getName()));
 			writer.write(" ( ");
-		
+			writer.write(newLine);
 			
 			ColumnDefinition[] columnDefs = table.getColumns();
 			String[] columns = new String[columnDefs.length];
 			
 			for(int i = 0; i < columnDefs.length; i++) {
-				columns[i] = buildColumnCreation(columnDefs[i], new StringWriter()).toString();
+				columns[i] = writeColumn(columnDefs[i], new StringWriter()).toString();
 			}
 			
-			writer.write(Helpers.join(", ", columns));
-			
+			writer.write(Helpers.join(", " + newLine, columns));
+
 			writer.write(" );");
 			
 			return writer;
+	}
+	
+	public Writer writeConstraint(Constraint constraint, Writer writer) {
+		
+		return writer;
 	}
 }

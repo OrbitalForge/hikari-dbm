@@ -28,6 +28,8 @@ public class AbstractDbService {
 	 * Internal Connection
 	 */
 	protected final HikariDataSource ds = new HikariDataSource();
+	protected final AbstractDbPlatform platform;
+	protected final SchemaManager schemaManager;
 	
 	public DataSource getDataSource() {
 		return ds;
@@ -52,13 +54,25 @@ public class AbstractDbService {
         ds.setJdbcUrl(prop.getProperty("db.jdbcConnection"));
         ds.addDataSourceProperty("user", prop.getProperty("db.user"));
         ds.addDataSourceProperty("password", prop.getProperty("db.password"));
+        
+        /* Setup Schema Manager */
+        schemaManager = new SchemaManager(this);
+        
+        /* Setup Db Platform */
+		try {
+			Class<?> clazz = Class.forName(prop.getProperty("db.platformClass"));
+			platform = (AbstractDbPlatform)clazz.newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+       
 	}
 	
 	public SchemaManager getSchemaManager() {
-		return new SchemaManager(this);
+		return schemaManager;
 	}
 
 	public AbstractDbPlatform getPlatform() {
-		return new H2Platform();
+		return platform;
 	}
 }
