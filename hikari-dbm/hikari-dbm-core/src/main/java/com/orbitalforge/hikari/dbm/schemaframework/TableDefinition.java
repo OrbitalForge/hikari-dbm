@@ -83,15 +83,13 @@ public class TableDefinition extends DatabaseObjectDefinition {
 	/* Foriegn Key Methods */
     public void addForeignKeyConstraint(
     		String name, 
-    		String sourceSchema,
-    		String sourceTable,
     		String sourceField,
     		String targetSchema,
     		String targetField, 
     		String targetTable) {
         ForeignKeyConstraint foreignKey = new ForeignKeyConstraint(
         		name, 
-        		sourceSchema, sourceTable, sourceField, 
+        		sourceField, 
         		targetSchema, targetField, targetTable);
         addConstraint(foreignKey);
     }

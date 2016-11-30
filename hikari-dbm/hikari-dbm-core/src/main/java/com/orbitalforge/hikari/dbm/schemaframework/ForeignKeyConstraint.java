@@ -10,11 +10,9 @@ public class ForeignKeyConstraint extends Constraint {
 	
 	public ForeignKeyConstraint(
 			String name, 
-			String sourceSchema, String sourceTable, String sourceField, 
+			String sourceField, 
 			String targetSchema, String targetTable, String targetField) {
 		setName(name);
-		setSchema(sourceSchema);
-		setTable(sourceTable);
 		setField(sourceField);
 		setTargetTable(targetTable);
 		setTargetField(targetField);
