@@ -26,6 +26,6 @@ public abstract class DatabaseObjectDefinition {
 		properties.put(key, value);
 	}
 	
-	public String getName() { return (String) properties.get("name"); }
+	public String getName() { return getProperty("name"); }
 	public void setName(String value) { setProperty("name", value); }
 }

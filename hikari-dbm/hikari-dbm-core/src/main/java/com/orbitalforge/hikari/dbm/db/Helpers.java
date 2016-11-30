@@ -45,6 +45,11 @@ public class Helpers {
 		
 		return buffer.toString();
 	}
+	
+	public static boolean isNullOrEmpty(String value) {
+		if(value == null || value == "") return true;
+		return false;
+	}
 		
 	public static String[] getColumns(ResultSet resultSet) throws SQLException {
 		ResultSetMetaData metadata = resultSet.getMetaData();

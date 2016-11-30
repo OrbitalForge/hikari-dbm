@@ -13,6 +13,7 @@ import java.util.Arrays;
 import com.orbitalforge.hikari.dbm.db.Helpers;
 import com.orbitalforge.hikari.dbm.exception.DbTypeNotMappedException;
 import com.orbitalforge.hikari.dbm.exception.HikariDbmException;
+import com.orbitalforge.hikari.dbm.exception.MissingParameterException;
 import com.orbitalforge.hikari.dbm.schemaframework.CheckConstraint;
 import com.orbitalforge.hikari.dbm.schemaframework.ColumnDefinition;
 import com.orbitalforge.hikari.dbm.schemaframework.Constraint;
@@ -27,12 +28,15 @@ public abstract class AbstractDbPlatform {
 	protected String identifierFormat = "\"%s\"";
 	
 	public String escapeIdentifier(String identifier) {
+		if(identifier == null) return "";
 		String cleaned = identifier.replaceAll("\"", "").replaceAll("\'", "");
 		if(cleaned == "") return cleaned;
 		return String.format(identifierFormat, cleaned);
 	}
 
 	public String joinIdentifiers(String... identifiers) {
+		if(identifiers == null) return "";
+		
 		String[] escaped = new String[identifiers.length];
 		for (int i = 0; i < identifiers.length; i++) {
 			escaped[i] = escapeIdentifier(identifiers[i]);
@@ -198,6 +202,10 @@ public abstract class AbstractDbPlatform {
     	String constraintType = "";
     	String genMods = "";
 
+    	if(Helpers.isNullOrEmpty(constraint.getTable())) throw new MissingParameterException();
+    	if(Helpers.isNullOrEmpty(constraint.getSchema())) throw new MissingParameterException();
+    	if(Helpers.isNullOrEmpty(constraint.getName())) throw new MissingParameterException();
+    	
         switch(constraint.getConstraintType())
         {
         /*
@@ -242,7 +250,7 @@ public abstract class AbstractDbPlatform {
         
         String result = String.format("ALTER TABLE %s ADD CONSTRAINT %s_%s %s %s;", 
         		joinIdentifiers(constraint.getSchema(), constraint.getTable()), prefix, 
-        		constraint.getName().toUpperCase(), constraintType, genMods);
+        		constraint.getName(), constraintType, genMods);
 		writer.write(result);
         return writer;
 	}
