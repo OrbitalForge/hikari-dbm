@@ -8,3 +8,9 @@ jdk:
   - oraclejdk8
 
 script: mvn clean verify -f hikari-dbm/pom.xml
+
+# safelist
+branches:
+  only:
+  - master
+  - stable
