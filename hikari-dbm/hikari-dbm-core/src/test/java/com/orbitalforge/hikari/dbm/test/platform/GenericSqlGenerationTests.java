@@ -16,6 +16,12 @@ package com.orbitalforge.hikari.dbm.test.platform;
  * limitations under the License.
  */
 
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.AssertJUnit;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.AssertJUnit;
 import java.io.IOException;
 import java.io.StringWriter;
 
@@ -28,35 +34,35 @@ import com.orbitalforge.hikari.dbm.exception.UnknownConstraintException;
 import com.orbitalforge.hikari.dbm.schemaframework.ForeignKeyConstraint;
 import com.orbitalforge.hikari.dbm.schemaframework.UniqueConstraint;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
-public class GenericSqlGenerationTests extends TestCase {
+public class GenericSqlGenerationTests {
 	private GenericPlatform platform;
 	private static final Logger logger = 
 	        LoggerFactory.getLogger(GenericSqlGenerationTests.class);
 	
+	@BeforeMethod
 	protected void setUp() {
 		platform = new GenericPlatform();
 		platform.setIdentifierFormat("\"%s\"");
 	}
 
+	@Test
 	public void test_identifierEscape() {
 		platform.setIdentifierFormat("\"%s\"");
 		
-		Assert.assertEquals("", platform.escapeIdentifier(""));
-		Assert.assertEquals("", platform.escapeIdentifier(null));
-		Assert.assertEquals("\"sample\"", platform.escapeIdentifier("sample"));
-		Assert.assertEquals("\"sample.sample\"", platform.escapeIdentifier("sample.sample"));
-		Assert.assertEquals("", platform.joinIdentifiers("", "", ""));
-		Assert.assertEquals("\"sample\"", platform.joinIdentifiers("sample"));
-		Assert.assertEquals("\"sample\".\"sample\"", platform.joinIdentifiers("sample", "sample"));
-		Assert.assertEquals("", platform.joinIdentifiers(null));
-		Assert.assertEquals("\"sample\"", platform.joinIdentifiers("sample", null));
-		Assert.assertEquals("", platform.joinIdentifiers(null, null));
-		Assert.assertEquals("\"sample\".\"sample\"", platform.joinIdentifiers(null, "sample", "sample", null));
+		AssertJUnit.assertEquals("", platform.escapeIdentifier(""));
+		AssertJUnit.assertEquals("", platform.escapeIdentifier(null));
+		AssertJUnit.assertEquals("\"sample\"", platform.escapeIdentifier("sample"));
+		AssertJUnit.assertEquals("\"sample.sample\"", platform.escapeIdentifier("sample.sample"));
+		AssertJUnit.assertEquals("", platform.joinIdentifiers("", "", ""));
+		AssertJUnit.assertEquals("\"sample\"", platform.joinIdentifiers("sample"));
+		AssertJUnit.assertEquals("\"sample\".\"sample\"", platform.joinIdentifiers("sample", "sample"));
+		AssertJUnit.assertEquals("", platform.joinIdentifiers(null));
+		AssertJUnit.assertEquals("\"sample\"", platform.joinIdentifiers("sample", null));
+		AssertJUnit.assertEquals("", platform.joinIdentifiers(null, null));
+		AssertJUnit.assertEquals("\"sample\".\"sample\"", platform.joinIdentifiers(null, "sample", "sample", null));
 	}
 	
+	@Test
 	public void test_genericConstraint() throws Exception {
 		GenericConstraint g = new GenericConstraint();
 		try { 
@@ -73,19 +79,20 @@ public class GenericSqlGenerationTests extends TestCase {
 		} 
 		catch (MissingParameterException ex) {}	
 		
-		Assert.assertEquals(null, g.getTable());
+		AssertJUnit.assertEquals(null, g.getTable());
 		g.setTable("sTable");
-		Assert.assertEquals("sTable", g.getTable());
+		AssertJUnit.assertEquals("sTable", g.getTable());
 		
-		Assert.assertEquals("", g.getSchema());
+		AssertJUnit.assertEquals("", g.getSchema());
 		try { platform.writeConstraint(g, new StringWriter()); }
 		catch(UnknownConstraintException e ) { }
 		
-		Assert.assertEquals("", g.getSchema());
+		AssertJUnit.assertEquals("", g.getSchema());
 		g.setSchema("sSchema");		
-		Assert.assertEquals("sSchema", g.getSchema());
+		AssertJUnit.assertEquals("sSchema", g.getSchema());
 	}
 	
+	@Test
 	public void test_writeForeignKeyConstraint() throws Exception {
 		platform.setIdentifierFormat("%s");
 		ForeignKeyConstraint fk = 
@@ -94,17 +101,18 @@ public class GenericSqlGenerationTests extends TestCase {
 						"sField", 
 						"tSchema", "tTable", "tField");
 		
-		Assert.assertEquals("sField", fk.getField());
-		Assert.assertEquals("tSchema", fk.getTargetSchema());
-		Assert.assertEquals("tTable", fk.getTargetTable());
-		Assert.assertEquals("tField", fk.getTargetField());
+		AssertJUnit.assertEquals("sField", fk.getField());
+		AssertJUnit.assertEquals("tSchema", fk.getTargetSchema());
+		AssertJUnit.assertEquals("tTable", fk.getTargetTable());
+		AssertJUnit.assertEquals("tField", fk.getTargetField());
 		
 		fk.setSchema("sSchema");
 		fk.setTable("sTable");
 		
-		Assert.assertEquals(Constants.ALTER_TABLE_FK, platform.writeConstraint(fk, new StringWriter()).toString());
+		AssertJUnit.assertEquals(Constants.ALTER_TABLE_FK, platform.writeConstraint(fk, new StringWriter()).toString());
 	}
 	
+	@Test
 	public void test_writeUniqueConstraint() throws Exception {
 		platform.setIdentifierFormat("%s");
 		UniqueConstraint uq = new UniqueConstraint();
@@ -116,6 +124,6 @@ public class GenericSqlGenerationTests extends TestCase {
 		catch(MissingParameterException e ) { }
 		uq.setFields("sField");
 		
-		Assert.assertEquals(Constants.ALTER_TABLE_UQ, platform.writeConstraint(uq, new StringWriter()).toString());
+		AssertJUnit.assertEquals(Constants.ALTER_TABLE_UQ, platform.writeConstraint(uq, new StringWriter()).toString());
 	}
 }

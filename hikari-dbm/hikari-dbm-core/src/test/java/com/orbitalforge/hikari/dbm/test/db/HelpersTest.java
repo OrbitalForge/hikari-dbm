@@ -16,53 +16,58 @@ package com.orbitalforge.hikari.dbm.test.db;
  * limitations under the License.
  */
 
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.Assert;
 import com.orbitalforge.hikari.dbm.db.Helpers;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
-public class HelpersTest extends TestCase {
+public class HelpersTest {
 	
+	@BeforeMethod
 	protected void setUp() {
 		
 	}
 	
+	@Test
 	public void test_join() {
-		Assert.assertEquals("SAMPLE, SAMPLE2", Helpers.join(", ", "SAMPLE", "SAMPLE2"));
+		Assert.assertEquals(Helpers.join(", ", "SAMPLE", "SAMPLE2"), "SAMPLE, SAMPLE2");
 	}
 	
+	@Test
 	public void test_parseBoolean() {
 		// (TRUE) Standard Range
-		Assert.assertEquals(true, Helpers.parseBoolean("YES"));
-		Assert.assertEquals(true, Helpers.parseBoolean("1"));
-		Assert.assertEquals(true, Helpers.parseBoolean(1));
-		Assert.assertEquals(true, Helpers.parseBoolean("TRUE"));
+		Assert.assertEquals(Helpers.parseBoolean("YES"), true);
+		Assert.assertEquals(Helpers.parseBoolean("1"), true);
+		Assert.assertEquals(Helpers.parseBoolean(1), true);
+		Assert.assertEquals(Helpers.parseBoolean("TRUE"), true);
 		
 		// (TRUE) Mixed Case
-		Assert.assertEquals(true, Helpers.parseBoolean("TrUe"));
-		Assert.assertEquals(true, Helpers.parseBoolean("YeS"));
+		Assert.assertEquals(Helpers.parseBoolean("TrUe"), true);
+		Assert.assertEquals(Helpers.parseBoolean("YeS"), true);
 		
 		// (FALSE) Standard Range
-		Assert.assertEquals(false, Helpers.parseBoolean("FALSE"));
-		Assert.assertEquals(false, Helpers.parseBoolean("0"));
-		Assert.assertEquals(false, Helpers.parseBoolean(0));
-		Assert.assertEquals(false, Helpers.parseBoolean("NO"));
+		Assert.assertEquals(Helpers.parseBoolean("FALSE"), false);
+		Assert.assertEquals(Helpers.parseBoolean("0"), false);
+		Assert.assertEquals(Helpers.parseBoolean(0), false);
+		Assert.assertEquals(Helpers.parseBoolean("NO"), false);
 		
 		// (FALSE) Mixed Case
-		Assert.assertEquals(false, Helpers.parseBoolean("No"));
-		Assert.assertEquals(false, Helpers.parseBoolean("FaLse"));
+		Assert.assertEquals(Helpers.parseBoolean("No"), false);
+		Assert.assertEquals(Helpers.parseBoolean("FaLse"), false);
 		
 		// (FALSE) Edge Cases
-		Assert.assertEquals(false, Helpers.parseBoolean(null));
-		Assert.assertEquals(false, Helpers.parseBoolean(8665));
-		Assert.assertEquals(false, Helpers.parseBoolean(-65535));
-		Assert.assertEquals(false, Helpers.parseBoolean("Jibberish"));
+		Assert.assertEquals(Helpers.parseBoolean(null), false);
+		Assert.assertEquals(Helpers.parseBoolean(8665), false);
+		Assert.assertEquals(Helpers.parseBoolean(-65535), false);
+		Assert.assertEquals(Helpers.parseBoolean("Jibberish"), false);
 	}
 	
+	@Test
 	public void test_readResults() {
 		// throw new RuntimeException("Not Implemented");
 	}
 	
+	@Test
 	public void test_getColumns() {
 		// throw new RuntimeException("Not Implemented");
 	}
