@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 
 import com.orbitalforge.hikari.dbm.exception.HikariDbmException;
 import com.orbitalforge.hikari.dbm.exception.MissingParameterException;
+import com.orbitalforge.hikari.dbm.exception.UnknownConstraintException;
 import com.orbitalforge.hikari.dbm.schemaframework.ForeignKeyConstraint;
+import com.orbitalforge.hikari.dbm.schemaframework.UniqueConstraint;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -39,20 +41,43 @@ public class GenericSqlGenerationTests extends TestCase {
 		Assert.assertEquals("\"sample\".\"sample\"", platform.joinIdentifiers(null, "sample", "sample", null));
 	}
 	
-	public void test_writeForiegnKey() throws HikariDbmException, IOException {
-		platform.setIdentifierFormat("%s");
+	public void test_genericConstraint() throws Exception {
+		GenericConstraint g = new GenericConstraint();
+		try { 
+			platform.writeConstraint(g, new StringWriter()).toString();
+			throw new Exception("Was expecting an exception because table and name are not set.");
+		} 
+		catch (MissingParameterException ex) {}	
 		
-		Exception e = null;
+		g.setName("unique");
+		
+		try { 
+			platform.writeConstraint(g, new StringWriter()).toString();
+			throw new Exception("Was expecting an exception because table is not set.");
+		} 
+		catch (MissingParameterException ex) {}	
+		
+		Assert.assertEquals(null, g.getTable());
+		g.setTable("sTable");
+		Assert.assertEquals("sTable", g.getTable());
+		
+		Assert.assertEquals("", g.getSchema());
+		try { platform.writeConstraint(g, new StringWriter()); }
+		catch(UnknownConstraintException e ) { }
+		
+		Assert.assertEquals("", g.getSchema());
+		g.setSchema("sSchema");		
+		Assert.assertEquals("sSchema", g.getSchema());
+	}
+	
+	public void test_writeForeignKeyConstraint() throws Exception {
+		platform.setIdentifierFormat("%s");
 		ForeignKeyConstraint fk = 
 				new ForeignKeyConstraint(
-						"test", 
+						"fkName", 
 						"sField", 
 						"tSchema", "tTable", "tField");
-		try { platform.writeConstraint(fk, new StringWriter()).toString(); } 
-		catch (MissingParameterException ex) { e = ex; }
-		Assert.assertNotNull("Expected a MissingParameterException to be thrown. The source table and schema have not been set on the ForeignKeyConstraint", e);
-		Assert.assertEquals(null, fk.getSchema());
-		Assert.assertEquals(null, fk.getTable());
+		
 		Assert.assertEquals("sField", fk.getField());
 		Assert.assertEquals("tSchema", fk.getTargetSchema());
 		Assert.assertEquals("tTable", fk.getTargetTable());
@@ -61,9 +86,20 @@ public class GenericSqlGenerationTests extends TestCase {
 		fk.setSchema("sSchema");
 		fk.setTable("sTable");
 		
-		Assert.assertEquals("sSchema", fk.getSchema());
-		Assert.assertEquals("sTable", fk.getTable());
 		Assert.assertEquals(Constants.ALTER_TABLE_FK, platform.writeConstraint(fk, new StringWriter()).toString());
 	}
 	
+	public void test_writeUniqueConstraint() throws Exception {
+		platform.setIdentifierFormat("%s");
+		UniqueConstraint uq = new UniqueConstraint();
+		uq.setName("uqName");
+		uq.setSchema("sSchema");
+		uq.setTable("sTable");
+		
+		try { platform.writeConstraint(uq, new StringWriter()); }
+		catch(MissingParameterException e ) { }
+		uq.setFields("sField");
+		
+		Assert.assertEquals(Constants.ALTER_TABLE_UQ, platform.writeConstraint(uq, new StringWriter()).toString());
+	}
 }

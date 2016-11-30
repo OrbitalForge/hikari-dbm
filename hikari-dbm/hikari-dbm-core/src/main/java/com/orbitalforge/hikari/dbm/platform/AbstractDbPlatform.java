@@ -14,6 +14,7 @@ import com.orbitalforge.hikari.dbm.db.Helpers;
 import com.orbitalforge.hikari.dbm.exception.DbTypeNotMappedException;
 import com.orbitalforge.hikari.dbm.exception.HikariDbmException;
 import com.orbitalforge.hikari.dbm.exception.MissingParameterException;
+import com.orbitalforge.hikari.dbm.exception.UnknownConstraintException;
 import com.orbitalforge.hikari.dbm.schemaframework.CheckConstraint;
 import com.orbitalforge.hikari.dbm.schemaframework.ColumnDefinition;
 import com.orbitalforge.hikari.dbm.schemaframework.Constraint;
@@ -202,10 +203,9 @@ public abstract class AbstractDbPlatform {
     	String constraintType = "";
     	String genMods = "";
 
-    	if(Helpers.isNullOrEmpty(constraint.getTable())) throw new MissingParameterException();
-    	if(Helpers.isNullOrEmpty(constraint.getSchema())) throw new MissingParameterException();
-    	if(Helpers.isNullOrEmpty(constraint.getName())) throw new MissingParameterException();
-    	
+    	if(Helpers.isNullOrEmpty(constraint.getTable())) throw new MissingParameterException("Table Name");
+    	if(Helpers.isNullOrEmpty(constraint.getName())) throw new MissingParameterException("Constraint Name");
+
         switch(constraint.getConstraintType())
         {
         /*
@@ -235,17 +235,19 @@ public abstract class AbstractDbPlatform {
                 break;
             case "PK":
             	PrimaryKeyConstraint pk = (PrimaryKeyConstraint)constraint;
+            	if(pk.getFields().length == 0) throw new MissingParameterException("Primary Key Constraint Fields Are Missing");
                 prefix = "PK";
                 constraintType = "PRIMARY KEY";
                 genMods = String.format("(%s)", joinAndEscape(", ", pk.getFields()));
                 break;
             case "UQ":
             	UniqueConstraint uq = (UniqueConstraint)constraint;
+            	if(uq.getFields().length == 0) throw new MissingParameterException("Unique Constraint Fields Are Missing");
                 prefix = "UQ";
                 constraintType = "UNIQUE";
                 genMods = String.format("(%s)", joinAndEscape(", ", uq.getFields()));
                 break;
-            default: throw new HikariDbmException(String.format("Unknown Constraint Type: %s", constraint.getClass().getName()));
+            default: throw new UnknownConstraintException(String.format("Unknown Constraint Type: %s", constraint.getClass().getName()));
         }
         
         String result = String.format("ALTER TABLE %s ADD CONSTRAINT %s_%s %s %s;", 
