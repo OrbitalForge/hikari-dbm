@@ -110,7 +110,7 @@ public class SchemaManager {
 			columns[i] = new ColumnDefinition(results.get(i));
 			// Parse Data Type
 			String dataType = results.get(i).get("data_type").toString().toLowerCase();
-			columns[i].setDbType(dbService.getPlatform().getColumnType(dataType));
+			// TODO: columns[i].setDbType(dbService.getPlatform().getColumnType(dataType));
 		}
 		
 		nps.close(); // Auto-Closes Query Results

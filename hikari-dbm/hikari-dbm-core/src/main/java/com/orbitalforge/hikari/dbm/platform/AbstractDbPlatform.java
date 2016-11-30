@@ -24,7 +24,6 @@ import com.orbitalforge.hikari.dbm.schemaframework.UniqueConstraint;
 
 public abstract class AbstractDbPlatform {
 	private Map<Integer, String> columnTypeMap = new HashMap<Integer, String>();
-	private Map<String, Integer> reverseColumnTypeMap = new HashMap<String, Integer>();
 	protected String identifierFormat = "\"%s\"";
 	
 	public String escapeIdentifier(String identifier) {
@@ -58,9 +57,20 @@ public abstract class AbstractDbPlatform {
 	 */
 	protected void registerColumnType(int dbType, String type) {
 		this.columnTypeMap.put(dbType, type);
-		// this.reverseColumnTypeMap.put(type, dbType);
 	}
 
+	protected void unregisterColumnType(int type) {
+		this.columnTypeMap.remove(type);
+	}
+	
+	/**
+	 * This will clear out the column type registry. This is needed when the
+	 * platform implementation overrides all types.
+	 */
+	protected void unregisterAllColumnTypes() {
+		this.columnTypeMap.clear();
+	}
+	
 	private void internalSetup() {
 		// Borrowed from
 		// https://github.com/hibernate/hibernate-orm/blob/master/hibernate-core/src/main/java/org/hibernate/dialect/Dialect.java
@@ -99,11 +109,6 @@ public abstract class AbstractDbPlatform {
 
 	public String getColumnType(int type) {
 		return this.columnTypeMap.get(type);
-	}
-
-	public int getColumnType(String dataType) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	private String renderTemplate(String template, String param, String value) {
