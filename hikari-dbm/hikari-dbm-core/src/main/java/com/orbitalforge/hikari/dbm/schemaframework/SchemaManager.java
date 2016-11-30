@@ -26,9 +26,10 @@ public class SchemaManager {
 	}
 	
 	public void createTable(TableDefinition table) throws HikariDbmException, IOException, SQLException {
-		Writer writer = table.buildCreationWriter(dbService.getPlatform(), new StringWriter());
+		Writer writer = dbService.getPlatform().writeTable(table, new StringWriter());
 		Connection connection = dbService.getDataSource().getConnection();
 		Statement statement = connection.createStatement();
+		System.out.println(writer.toString());
 		statement.execute(writer.toString());
 		System.out.println(writer.toString());
 	}
@@ -109,7 +110,7 @@ public class SchemaManager {
 			columns[i] = new ColumnDefinition(results.get(i));
 			// Parse Data Type
 			String dataType = results.get(i).get("data_type").toString().toLowerCase();
-			columns[i].setDbType(dbService.getPlatform().getColumnType(dataType));
+			// TODO: columns[i].setDbType(dbService.getPlatform().getColumnType(dataType));
 		}
 		
 		nps.close(); // Auto-Closes Query Results

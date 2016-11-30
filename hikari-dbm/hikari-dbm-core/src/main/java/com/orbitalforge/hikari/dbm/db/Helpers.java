@@ -7,10 +7,45 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public class Helpers {
 	private Helpers() { }
 	
+	/**
+	 * Implementation of String.join to allow for < Java 1.8 Compatibility
+	 * @param delimiter
+	 * @param values
+	 * @return
+	 */
+	public static String join(String delimiter, String... values) {
+		boolean and = false;
+		StringBuffer buffer = new StringBuffer();
+		
+		for(String v : values) {
+			if(and) { buffer.append(delimiter); }
+			else { and = true; }
+			
+			buffer.append(v);
+		}
+		
+		return buffer.toString();
+	}
+	
+	public static String join(String delimiter, List<String> values) {
+		boolean and = false;
+		StringBuffer buffer = new StringBuffer();
+		
+		for(String v : values) {
+			if(and) { buffer.append(delimiter); }
+			else { and = true; }
+			
+			buffer.append(v);
+		}
+		
+		return buffer.toString();
+	}
+		
 	public static String[] getColumns(ResultSet resultSet) throws SQLException {
 		ResultSetMetaData metadata = resultSet.getMetaData();
 		String[] results = new String[metadata.getColumnCount()];
@@ -42,7 +77,7 @@ public class Helpers {
 		return results;
 	}
 
-	public static Boolean parseBoolean(Object objectValue) {
+	public static boolean parseBoolean(Object objectValue) {
 		if(objectValue == null) return false;
 		if(objectValue.getClass() == String.class) {
 			String value = ((String)objectValue).toLowerCase();
