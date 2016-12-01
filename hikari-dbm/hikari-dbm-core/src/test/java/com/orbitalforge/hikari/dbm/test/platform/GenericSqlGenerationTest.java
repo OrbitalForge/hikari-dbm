@@ -19,25 +19,20 @@ package com.orbitalforge.hikari.dbm.test.platform;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
 import org.testng.AssertJUnit;
-import org.testng.annotations.Test;
-import org.testng.annotations.BeforeMethod;
-import org.testng.AssertJUnit;
-import java.io.IOException;
 import java.io.StringWriter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.orbitalforge.hikari.dbm.exception.HikariDbmException;
 import com.orbitalforge.hikari.dbm.exception.MissingParameterException;
 import com.orbitalforge.hikari.dbm.exception.UnknownConstraintException;
 import com.orbitalforge.hikari.dbm.schemaframework.ForeignKeyConstraint;
 import com.orbitalforge.hikari.dbm.schemaframework.UniqueConstraint;
 
-public class GenericSqlGenerationTests {
+public class GenericSqlGenerationTest {
 	private GenericPlatform platform;
 	private static final Logger logger = 
-	        LoggerFactory.getLogger(GenericSqlGenerationTests.class);
+	        LoggerFactory.getLogger(GenericSqlGenerationTest.class);
 	
 	@BeforeMethod
 	protected void setUp() {
