@@ -8,7 +8,9 @@
 	</test> <!-- Test -->
 	<test name="SQL Generation">
 		<classes>
-			<class name="com.orbitalforge.hikari.dbm.test.platform.GenericSqlGenerationTests" />
+			<class name="com.orbitalforge.hikari.dbm.test.platform.IdentifierTest" />
+			<class name="com.orbitalforge.hikari.dbm.test.platform.ConstraintGenerationTest" />
+			<class name="com.orbitalforge.hikari.dbm.test.platform.ColumnGenerationTest" />
 		</classes>
 	</test>
 </suite> <!-- Suite -->

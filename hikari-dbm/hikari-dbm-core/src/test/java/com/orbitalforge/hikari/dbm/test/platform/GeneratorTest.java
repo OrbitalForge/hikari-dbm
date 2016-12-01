@@ -16,8 +16,15 @@ package com.orbitalforge.hikari.dbm.test.platform;
  * limitations under the License.
  */
 
-public class Constants {
-	public static final String ALTER_TABLE_FK = "ALTER TABLE sSchema.sTable ADD CONSTRAINT FK_fkName FOREIGN KEY (sField) REFERENCES tSchema.tTable(tField);";
-	public static final String ALTER_TABLE_UQ = "ALTER TABLE sSchema.sTable ADD CONSTRAINT UQ_uqName UNIQUE (sField);";
-	public static final String BASIC_COLUMN = "\"TEST\" nvarchar(MAX) NOT NULL";
+
+import org.testng.annotations.BeforeMethod;
+
+public abstract class GeneratorTest {
+	protected GenericPlatform platform;
+	
+	@BeforeMethod
+	protected void setUp() {
+		platform = new GenericPlatform();
+		platform.setIdentifierFormat("\"%s\"");
+	}
 }

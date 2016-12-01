@@ -16,11 +16,7 @@ package com.orbitalforge.hikari.dbm.test.platform;
  * limitations under the License.
  */
 
-import java.io.IOException;
-import java.io.Writer;
-
 import com.orbitalforge.hikari.dbm.platform.AbstractDbPlatform;
-import com.orbitalforge.hikari.dbm.schemaframework.ColumnDefinition;
 
 public class GenericPlatform extends AbstractDbPlatform {
 	@Override
@@ -35,4 +31,9 @@ public class GenericPlatform extends AbstractDbPlatform {
 	protected boolean supportsDefaultConstraint() {
 		return false;
 	}
+
+	public boolean isTypeMapped(int int1) {
+		return (getColumnType(int1) != null);
+	}
+	
 }

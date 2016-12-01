@@ -29,34 +29,9 @@ import com.orbitalforge.hikari.dbm.exception.UnknownConstraintException;
 import com.orbitalforge.hikari.dbm.schemaframework.ForeignKeyConstraint;
 import com.orbitalforge.hikari.dbm.schemaframework.UniqueConstraint;
 
-public class GenericSqlGenerationTest {
-	private GenericPlatform platform;
+public class ConstraintGenerationTest extends GeneratorTest {
 	private static final Logger logger = 
-	        LoggerFactory.getLogger(GenericSqlGenerationTest.class);
-	
-	@BeforeMethod
-	protected void setUp() {
-		platform = new GenericPlatform();
-		platform.setIdentifierFormat("\"%s\"");
-	}
-
-	@Test
-	public void test_identifierEscape() {
-		platform.setIdentifierFormat("\"%s\"");
-		
-		AssertJUnit.assertEquals("", platform.escapeIdentifier(""));
-		AssertJUnit.assertEquals("", platform.escapeIdentifier(null));
-		AssertJUnit.assertEquals("\"sample\"", platform.escapeIdentifier("sample"));
-		AssertJUnit.assertEquals("\"sample.sample\"", platform.escapeIdentifier("sample.sample"));
-		AssertJUnit.assertEquals("", platform.joinIdentifiers("", "", ""));
-		AssertJUnit.assertEquals("\"sample\"", platform.joinIdentifiers("sample"));
-		AssertJUnit.assertEquals("\"sample\".\"sample\"", platform.joinIdentifiers("sample", "sample"));
-		AssertJUnit.assertEquals("", platform.joinIdentifiers(null));
-		AssertJUnit.assertEquals("\"sample\"", platform.joinIdentifiers("sample", null));
-		AssertJUnit.assertEquals("", platform.joinIdentifiers(null, null));
-		AssertJUnit.assertEquals("\"sample\".\"sample\"", platform.joinIdentifiers(null, "sample", "sample", null));
-	}
-	
+	        LoggerFactory.getLogger(ConstraintGenerationTest.class);
 	@Test
 	public void test_genericConstraint() throws Exception {
 		GenericConstraint g = new GenericConstraint();
