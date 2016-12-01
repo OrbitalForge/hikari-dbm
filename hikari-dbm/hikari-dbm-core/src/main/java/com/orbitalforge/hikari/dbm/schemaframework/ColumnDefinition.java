@@ -51,6 +51,12 @@ public class ColumnDefinition extends DatabaseObjectDefinition {
 		super();
 	}
 	
+	public String getSchema() { return getProperty("schema", ""); }
+	public void setSchema(String value) { setProperty("schema", value); }
+	
+	public String getTable() { return getProperty("table"); }
+	public void setTable(String value) { setProperty("table", value); }
+	
 	public boolean getIsAutoIncrement() { return getProperty("isAutoIncrement", false); }
 	public void setIsAutoIncrement(boolean value) { setProperty("isAutoIncrement", value); }
 	

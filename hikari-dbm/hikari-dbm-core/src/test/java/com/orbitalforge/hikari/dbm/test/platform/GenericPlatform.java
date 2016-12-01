@@ -30,9 +30,4 @@ public class GenericPlatform extends AbstractDbPlatform {
 	public void setIdentifierFormat(String format) {
 		this.identifierFormat = format;
 	}
-
-	@Override
-	public void buildAutoIncrement(ColumnDefinition columnDefinition, Writer writer) throws IOException {
-		writer.write(" AUTO_INCREMENT");
-	}
 }

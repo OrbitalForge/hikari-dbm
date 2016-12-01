@@ -19,7 +19,6 @@ package com.orbitalforge.hikari.dbm.schemaframework;
 /**
  * This class has not been implemented yet
  */
-@Deprecated
 public class DefaultConstraint extends Constraint {
 	public static final String CONSTRAINT_TYPE = "DF";
 
@@ -27,4 +26,10 @@ public class DefaultConstraint extends Constraint {
 	public String getConstraintType() {
 		return CONSTRAINT_TYPE;
 	}
+	
+	public String getDefaultValue() { return getProperty("defaultValue").toString(); }
+	public void setDefaultValue(Object value) { setProperty("defaultValue", value); }
+	
+	public String getField() { return getProperty("field"); }
+	public void setField(String value) { setProperty("field", value); }
 }

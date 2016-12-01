@@ -28,6 +28,8 @@ import java.util.function.Function;
 public class Helpers {
 	private Helpers() { }
 	
+	public static final String EOL = System.getProperty("line.separator");
+	
 	/**
 	 * Implementation of String.join to allow for < Java 1.8 Compatibility
 	 * @param delimiter

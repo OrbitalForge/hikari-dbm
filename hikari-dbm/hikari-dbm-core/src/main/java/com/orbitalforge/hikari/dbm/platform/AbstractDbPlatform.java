@@ -21,6 +21,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.sql.Types;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
@@ -31,7 +32,6 @@ import com.orbitalforge.hikari.dbm.exception.DbTypeNotMappedException;
 import com.orbitalforge.hikari.dbm.exception.HikariDbmException;
 import com.orbitalforge.hikari.dbm.exception.MissingParameterException;
 import com.orbitalforge.hikari.dbm.exception.UnknownConstraintException;
-import com.orbitalforge.hikari.dbm.schemaframework.CheckConstraint;
 import com.orbitalforge.hikari.dbm.schemaframework.ColumnDefinition;
 import com.orbitalforge.hikari.dbm.schemaframework.Constraint;
 import com.orbitalforge.hikari.dbm.schemaframework.DefaultConstraint;
@@ -145,49 +145,97 @@ public abstract class AbstractDbPlatform {
 				column.getLength() <= 0 ? "MAX" : Long.toString(column.getLength()));
 		typeTemplate = renderTemplate(typeTemplate, "%p", Integer.toString(column.getPrecision()));
 		typeTemplate = renderTemplate(typeTemplate, "%s", Integer.toString(column.getScale()));
-
-		writer.write(" ");
 		writer.write(typeTemplate);
 	}
 
-	protected abstract void buildAutoIncrement(ColumnDefinition columnDefinition, Writer writer) throws IOException;
-
 	private Writer writeColumn(ColumnDefinition column, Writer writer) throws HikariDbmException, IOException {
 		writer.write(this.escapeIdentifier(column.getName()));
+		writer.write(" ");
 		writeDbType(column, writer);
-		if (column.getIsNullable())
-			writer.write(" NOT NULL");
+		if (!column.getIsNullable()) writer.write(" NOT NULL");
+		/*
 		if (column.getIsAutoIncrement())
 			this.buildAutoIncrement(column, writer);
-
+		 */
 		return writer;
 	}
 
 	public Writer writeTable(TableDefinition table, Writer writer) throws HikariDbmException, IOException {
-		String newLine = System.getProperty("line.separator");
 		writer.write("CREATE TABLE ");
 		// TODO: Add schema prefix ...
 		writer.write(joinIdentifiers(table.getName()));
 		writer.write(" ( ");
-		writer.write(newLine);
+		writer.write(Helpers.EOL);
 
 		ColumnDefinition[] columnDefs = table.getColumns();
 		String[] columns = new String[columnDefs.length];
 
+		List<ColumnDefinition> autoIncrements = new ArrayList<>();
+		
 		for (int i = 0; i < columnDefs.length; i++) {
 			columns[i] = writeColumn(columnDefs[i], new StringWriter()).toString();
+			if(columnDefs[i].getIsAutoIncrement()) autoIncrements.add(columnDefs[i]);
 		}
 
-		writer.write(Helpers.join(", " + newLine, columns));
+		writer.write(Helpers.join(", " + Helpers.EOL, columns));
 
 		writer.write(" );");
-		writer.write(newLine);
+		writer.write(Helpers.EOL);
 		writeConstraints(writer, table.getConstraints());
+		writer.write(Helpers.EOL);
+		writeAutoIncrements(writer, autoIncrements.iterator());
 		
 		return writer;
 	}
 
-    private String joinAndEscape(String delim, String... idents) {
+	/**
+	 * Writes a collection of auto increments
+	 * Arrays.stream(array).iterator();
+	 * @param writer
+	 * @param defs
+	 * @return
+	 * @throws IOException
+	 * @throws DbTypeNotMappedException
+	 */
+    private Writer writeAutoIncrements(Writer writer, Iterator<ColumnDefinition> defs) throws IOException, DbTypeNotMappedException {
+    	boolean and = false;
+    	while(defs.hasNext()) {
+    		ColumnDefinition def = defs.next();
+    		
+    		if(and) {
+    			writer.write(Helpers.EOL);
+    		} else { and = true; }
+    		
+    		if(def.getIsAutoIncrement()) writeAutoIncrement(def, writer);
+    	}
+    	
+    	return writer;
+	}
+    
+    /**
+     * Constructs a table alter statement to add AUTO_INCREMENT or
+     * IDENTITY(1,1) or whatever the auto incrementing column type is for a
+     * given database platform. In cases such as MySql/MariaDB - auto
+     * increment must be the PK and there can only be one per table. It is
+     * important to note that this function does not add the primary key
+     * designation to a field and as such, all other alterations must occur
+     * before this function is called.
+     * @param array
+     * @param writer
+     * @throws IOException 
+     * @throws DbTypeNotMappedException 
+     */
+    public void writeAutoIncrement(ColumnDefinition column, Writer writer) throws DbTypeNotMappedException, IOException {
+    	// ALTER TABLE `document` MODIFY `document_id` INT AUTO_INCREMENT;
+    	writer.write(String.format(
+    			"ALTER TABLE %s MODIFY %s ", 
+    			joinIdentifiers(column.getSchema(), column.getTable()),
+    			escapeIdentifier(column.getName())));
+    	writeDbType(column, writer);
+    	writer.write(" AUTO_INCREMENT;");
+	}
+
+	private String joinAndEscape(String delim, String... idents) {
     	String[] results = new String[idents.length];
     	
     	for(int i = 0; i < idents.length; i++) {
@@ -199,11 +247,10 @@ public abstract class AbstractDbPlatform {
     
     public Writer writeConstraints(Writer writer, Constraint...constraints) throws IOException, HikariDbmException {
     	boolean and = false;
-    	String newLine = System.getProperty("line.separator");
     	
     	for(Constraint c : constraints) {
     		if(and) {
-    			writer.write(newLine);
+    			writer.write(Helpers.EOL);
     		} else { and = true; }
     		
     		writeConstraint(c, writer);
@@ -219,22 +266,23 @@ public abstract class AbstractDbPlatform {
 
     	if(Helpers.isNullOrEmpty(constraint.getTable())) throw new MissingParameterException("Table Name");
     	if(Helpers.isNullOrEmpty(constraint.getName())) throw new MissingParameterException("Constraint Name");
-
+    	
         switch(constraint.getConstraintType())
         {
-        /*
+        	/*
             case CheckConstraint.class.getName():
                 prefix = "CK";
                 constraintType = "CHECK";
                 genMods = String.format("(%s)", Helpers.join(" ", mods).trim());
                 break;
-            case DefaultConstraint.class.getName():
+         	*/
+            case DefaultConstraint.CONSTRAINT_TYPE:
+            	DefaultConstraint df = (DefaultConstraint)constraint;
                 prefix = "DF";
                 constraintType = "DEFAULT";
-                genMods = String.format("{0} FOR {1}", mods[1], escapeIdentifier(mods[0]));
+                genMods = String.format("%s FOR %s", df.getDefaultValue(), escapeIdentifier(df.getField()));
                 break;
-                */
-            case "FK":
+            case ForeignKeyConstraint.CONSTRAINT_TYPE:
             	ForeignKeyConstraint fk = (ForeignKeyConstraint)constraint;
                 prefix = "FK";
                 constraintType = "FOREIGN KEY";
@@ -247,14 +295,14 @@ public abstract class AbstractDbPlatform {
                 		joinIdentifiers(fk.getTargetSchema(), fk.getTargetTable()), 
                 		escapeIdentifier(fk.getTargetField()));
                 break;
-            case "PK":
+            case PrimaryKeyConstraint.CONSTRAINT_TYPE:
             	PrimaryKeyConstraint pk = (PrimaryKeyConstraint)constraint;
             	if(pk.getFields().length == 0) throw new MissingParameterException("Primary Key Constraint Fields Are Missing");
                 prefix = "PK";
                 constraintType = "PRIMARY KEY";
                 genMods = String.format("(%s)", joinAndEscape(", ", pk.getFields()));
                 break;
-            case "UQ":
+            case UniqueConstraint.CONSTRAINT_TYPE:
             	UniqueConstraint uq = (UniqueConstraint)constraint;
             	if(uq.getFields().length == 0) throw new MissingParameterException("Unique Constraint Fields Are Missing");
                 prefix = "UQ";

@@ -23,6 +23,7 @@ import java.sql.Types;
 import com.orbitalforge.hikari.dbm.db.AbstractDbService;
 import com.orbitalforge.hikari.dbm.exception.HikariDbmException;
 import com.orbitalforge.hikari.dbm.schemaframework.ColumnDefinition;
+import com.orbitalforge.hikari.dbm.schemaframework.DefaultConstraint;
 import com.orbitalforge.hikari.dbm.schemaframework.PrimaryKeyConstraint;
 import com.orbitalforge.hikari.dbm.schemaframework.SchemaManager;
 import com.orbitalforge.hikari.dbm.schemaframework.TableDefinition;
@@ -58,6 +59,7 @@ public class ConsoleTester {
 		def1.setName("id");
 		def1.setDbType(Types.BIGINT);
 		def1.setIsAutoIncrement(true);
+		def1.setIsNullable(false);
 		
 		ColumnDefinition def2 = new ColumnDefinition();
 		def2.setDbType(Types.VARCHAR);
@@ -81,7 +83,14 @@ public class ConsoleTester {
 		pk.setName("sample");
 		pk.setFields("id");
 		
+		/*
+		DefaultConstraint df = new DefaultConstraint();
+		df.setName("sample");
+		df.setField("id");
+		df.setDefaultValue("AUTO_INCREMENT");
+		*/
 		table.addConstraint(pk);
+		// table.addConstraint(df);
 		
 		return table;
 	}
