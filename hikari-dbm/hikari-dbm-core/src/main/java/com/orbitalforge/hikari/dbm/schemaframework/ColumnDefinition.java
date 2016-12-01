@@ -74,4 +74,7 @@ public class ColumnDefinition extends DatabaseObjectDefinition {
 	
 	public int getScale() { return getProperty("scale", 4); }
 	public void setScale(int value) { setProperty("scale", value); }
+	
+	public Object getDefaultValue() { return getProperty("defaultValue"); }
+	public void setDefaultValue(Object value) { setProperty("defaultValue", value); }
 }

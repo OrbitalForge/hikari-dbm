@@ -25,4 +25,9 @@ public class MariaDbPlatform extends AbstractDbPlatform{
 		// NVARCHAR = LONGTEXT
 		registerColumnType(Types.NVARCHAR, "LONGTEXT");
 	}
+
+	@Override
+	protected boolean supportsDefaultConstraint() {
+		return false;
+	}
 }

@@ -22,4 +22,9 @@ public class H2Platform extends AbstractDbPlatform {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	protected boolean supportsDefaultConstraint() {
+		return false;
+	}
 }

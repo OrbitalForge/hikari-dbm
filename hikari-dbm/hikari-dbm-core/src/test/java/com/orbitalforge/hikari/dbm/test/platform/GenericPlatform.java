@@ -30,4 +30,9 @@ public class GenericPlatform extends AbstractDbPlatform {
 	public void setIdentifierFormat(String format) {
 		this.identifierFormat = format;
 	}
+
+	@Override
+	protected boolean supportsDefaultConstraint() {
+		return false;
+	}
 }
