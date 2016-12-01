@@ -2,7 +2,9 @@
 [![Build Status](https://travis-ci.org/OrbitalForge/hikari-dbm.svg?branch=master)](https://travis-ci.org/OrbitalForge/hikari-dbm)
 [![codebeat badge](https://codebeat.co/badges/3f047966-1c6a-4b0f-bb53-7fa1abe02c29)](https://codebeat.co/projects/github-com-orbitalforge-hikari-dbm)
 
-hikari-dbm is intended to provide a framework for building scalable applications.
+hikari-dbm is intended to provide a framework for building scalable applications 
+hence Database Management (dbm). The other intent is to provide a light-weight 
+mapping framework. ORM refers to this as dynamic mapping but I prefer to call it "I need my data".
 
 ## About
 The reasoning for developing hikari-dbm is driven from frustration with existing
