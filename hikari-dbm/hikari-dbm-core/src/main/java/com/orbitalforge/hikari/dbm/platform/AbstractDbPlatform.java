@@ -159,8 +159,6 @@ public abstract class AbstractDbPlatform {
 			writer.write(" NOT NULL");
 		if (column.getIsAutoIncrement())
 			this.buildAutoIncrement(column, writer);
-		if (column.getIsPrimaryKey())
-			writer.write(" PRIMARY KEY");
 
 		return writer;
 	}

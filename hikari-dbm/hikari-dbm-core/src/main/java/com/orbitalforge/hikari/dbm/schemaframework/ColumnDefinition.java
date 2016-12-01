@@ -51,9 +51,6 @@ public class ColumnDefinition extends DatabaseObjectDefinition {
 		super();
 	}
 	
-	public boolean getIsPrimaryKey() { return getProperty("isPrimaryKey", false); }
-	public void setIsPrimaryKey(boolean value) { setProperty("isPrimaryKey", value); }
-	
 	public boolean getIsAutoIncrement() { return getProperty("isAutoIncrement", false); }
 	public void setIsAutoIncrement(boolean value) { setProperty("isAutoIncrement", value); }
 	
