@@ -1,5 +1,21 @@
 package com.orbitalforge.hikari.dbm.platform;
 
+/*
+ * Copyright (C) 2016 Travis Sharp <furiousscissors@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -13,6 +29,8 @@ import java.util.Arrays;
 import com.orbitalforge.hikari.dbm.db.Helpers;
 import com.orbitalforge.hikari.dbm.exception.DbTypeNotMappedException;
 import com.orbitalforge.hikari.dbm.exception.HikariDbmException;
+import com.orbitalforge.hikari.dbm.exception.MissingParameterException;
+import com.orbitalforge.hikari.dbm.exception.UnknownConstraintException;
 import com.orbitalforge.hikari.dbm.schemaframework.CheckConstraint;
 import com.orbitalforge.hikari.dbm.schemaframework.ColumnDefinition;
 import com.orbitalforge.hikari.dbm.schemaframework.Constraint;
@@ -27,12 +45,15 @@ public abstract class AbstractDbPlatform {
 	protected String identifierFormat = "\"%s\"";
 	
 	public String escapeIdentifier(String identifier) {
+		if(identifier == null) return "";
 		String cleaned = identifier.replaceAll("\"", "").replaceAll("\'", "");
 		if(cleaned == "") return cleaned;
 		return String.format(identifierFormat, cleaned);
 	}
 
 	public String joinIdentifiers(String... identifiers) {
+		if(identifiers == null) return "";
+		
 		String[] escaped = new String[identifiers.length];
 		for (int i = 0; i < identifiers.length; i++) {
 			escaped[i] = escapeIdentifier(identifiers[i]);
@@ -198,6 +219,9 @@ public abstract class AbstractDbPlatform {
     	String constraintType = "";
     	String genMods = "";
 
+    	if(Helpers.isNullOrEmpty(constraint.getTable())) throw new MissingParameterException("Table Name");
+    	if(Helpers.isNullOrEmpty(constraint.getName())) throw new MissingParameterException("Constraint Name");
+
         switch(constraint.getConstraintType())
         {
         /*
@@ -227,22 +251,24 @@ public abstract class AbstractDbPlatform {
                 break;
             case "PK":
             	PrimaryKeyConstraint pk = (PrimaryKeyConstraint)constraint;
+            	if(pk.getFields().length == 0) throw new MissingParameterException("Primary Key Constraint Fields Are Missing");
                 prefix = "PK";
                 constraintType = "PRIMARY KEY";
                 genMods = String.format("(%s)", joinAndEscape(", ", pk.getFields()));
                 break;
             case "UQ":
             	UniqueConstraint uq = (UniqueConstraint)constraint;
+            	if(uq.getFields().length == 0) throw new MissingParameterException("Unique Constraint Fields Are Missing");
                 prefix = "UQ";
                 constraintType = "UNIQUE";
                 genMods = String.format("(%s)", joinAndEscape(", ", uq.getFields()));
                 break;
-            default: throw new HikariDbmException(String.format("Unknown Constraint Type: %s", constraint.getClass().getName()));
+            default: throw new UnknownConstraintException(String.format("Unknown Constraint Type: %s", constraint.getClass().getName()));
         }
         
         String result = String.format("ALTER TABLE %s ADD CONSTRAINT %s_%s %s %s;", 
         		joinIdentifiers(constraint.getSchema(), constraint.getTable()), prefix, 
-        		constraint.getName().toUpperCase(), constraintType, genMods);
+        		constraint.getName(), constraintType, genMods);
 		writer.write(result);
         return writer;
 	}
