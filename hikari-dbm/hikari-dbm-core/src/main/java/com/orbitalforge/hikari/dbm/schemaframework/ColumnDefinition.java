@@ -51,8 +51,11 @@ public class ColumnDefinition extends DatabaseObjectDefinition {
 		super();
 	}
 	
-	public boolean getIsPrimaryKey() { return getProperty("isPrimaryKey", false); }
-	public void setIsPrimaryKey(boolean value) { setProperty("isPrimaryKey", value); }
+	public String getSchema() { return getProperty("schema", ""); }
+	public void setSchema(String value) { setProperty("schema", value); }
+	
+	public String getTable() { return getProperty("table"); }
+	public void setTable(String value) { setProperty("table", value); }
 	
 	public boolean getIsAutoIncrement() { return getProperty("isAutoIncrement", false); }
 	public void setIsAutoIncrement(boolean value) { setProperty("isAutoIncrement", value); }
@@ -71,4 +74,7 @@ public class ColumnDefinition extends DatabaseObjectDefinition {
 	
 	public int getScale() { return getProperty("scale", 4); }
 	public void setScale(int value) { setProperty("scale", value); }
+	
+	public Object getDefaultValue() { return getProperty("defaultValue"); }
+	public void setDefaultValue(Object value) { setProperty("defaultValue", value); }
 }

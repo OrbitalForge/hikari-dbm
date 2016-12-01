@@ -16,11 +16,6 @@ package com.orbitalforge.hikari.dbm.platform;
  * limitations under the License.
  */
 
-import java.io.IOException;
-import java.io.Writer;
-
-import com.orbitalforge.hikari.dbm.schemaframework.ColumnDefinition;
-
 public class H2Platform extends AbstractDbPlatform {
 	@Override
 	public void setup() {
@@ -29,7 +24,7 @@ public class H2Platform extends AbstractDbPlatform {
 	}
 
 	@Override
-	public void buildAutoIncrement(ColumnDefinition columnDefinition, Writer writer) throws IOException {
-		writer.write(" AUTO_INCREMENT");
+	protected boolean supportsDefaultConstraint() {
+		return false;
 	}
 }

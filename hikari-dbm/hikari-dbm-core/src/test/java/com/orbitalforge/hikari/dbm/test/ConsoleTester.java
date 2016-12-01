@@ -23,6 +23,7 @@ import java.sql.Types;
 import com.orbitalforge.hikari.dbm.db.AbstractDbService;
 import com.orbitalforge.hikari.dbm.exception.HikariDbmException;
 import com.orbitalforge.hikari.dbm.schemaframework.ColumnDefinition;
+import com.orbitalforge.hikari.dbm.schemaframework.PrimaryKeyConstraint;
 import com.orbitalforge.hikari.dbm.schemaframework.SchemaManager;
 import com.orbitalforge.hikari.dbm.schemaframework.TableDefinition;
 import com.orbitalforge.hikari.dbm.schemaframework.UniqueConstraint;
@@ -56,13 +57,14 @@ public class ConsoleTester {
 		ColumnDefinition def1 = new ColumnDefinition();
 		def1.setName("id");
 		def1.setDbType(Types.BIGINT);
-		def1.setIsPrimaryKey(true);
 		def1.setIsAutoIncrement(true);
+		def1.setIsNullable(false);
 		
 		ColumnDefinition def2 = new ColumnDefinition();
 		def2.setDbType(Types.VARCHAR);
 		def2.setName("kubo");
 		def2.setLength(767);
+		def2.setDefaultValue("'Quality'");
 		
 		ColumnDefinition def3 = new ColumnDefinition();
 		def3.setName("monies");
@@ -76,6 +78,12 @@ public class ConsoleTester {
 		uq.setName("SAMPLE");
 		uq.setFields("kubo");
 		table.addConstraint(uq);
+		
+		PrimaryKeyConstraint pk = new PrimaryKeyConstraint();
+		pk.setName("sample");
+		pk.setFields("id");
+		
+		table.addConstraint(pk);
 		
 		return table;
 	}

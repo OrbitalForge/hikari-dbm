@@ -35,8 +35,8 @@ public class ForeignKeyConstraint extends Constraint {
 		setTargetField(targetField);
 	}
 	
-	public String getField() { return getProperty("sourceField"); }
-	public void setField(String value) { setProperty("sourceField", value); }
+	public String getField() { return getProperty("field"); }
+	public void setField(String value) { setProperty("field", value); }
 	
 	public String getTargetTable() { return getProperty("targetTable"); }
 	public void setTargetTable(String value) { setProperty("targetTable", value); }

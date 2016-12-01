@@ -56,7 +56,9 @@ public class TableDefinition extends DatabaseObjectDefinition {
 		if(columns.containsKey(column.getName())) {
 			throw new RuntimeException("Column Exists");
 		}
-		
+		// This will populate the table name and schema
+		column.setSchema(getSchema());
+		column.setTable(getName());
 		columns.put(column.getName(), column);
 		return this;
 	}

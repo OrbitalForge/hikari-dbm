@@ -3,8 +3,7 @@
 <suite name="Suite">
 	<test name="Test">
 		<classes>
-			<class
-				name="com.orbitalforge.hikari.dbm.test.platform.GenericSqlGenerationTests" />
+			<class name="com.orbitalforge.hikari.dbm.test.platform.GenericSqlGenerationTests" />
 			<class name="com.orbitalforge.hikari.dbm.test.db.HelpersTest" />
 		</classes>
 	</test> <!-- Test -->

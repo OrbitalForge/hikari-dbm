@@ -32,7 +32,7 @@ public class GenericPlatform extends AbstractDbPlatform {
 	}
 
 	@Override
-	public void buildAutoIncrement(ColumnDefinition columnDefinition, Writer writer) throws IOException {
-		writer.write(" AUTO_INCREMENT");
+	protected boolean supportsDefaultConstraint() {
+		return false;
 	}
 }

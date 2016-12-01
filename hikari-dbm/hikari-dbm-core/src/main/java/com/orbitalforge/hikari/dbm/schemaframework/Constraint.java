@@ -26,6 +26,8 @@ public abstract class Constraint extends DatabaseObjectDefinition {
 	public void setTable(String value) { setProperty("table", value); }
 	
 	public String getConstraintIdentifier() {
+		// If the constraint already has its identifier added in.
+		if(getName().toLowerCase().substring(0, 3) == getConstraintType().toLowerCase() + "_") return getName();
 		return String.format("%s_%s", getConstraintType(), getName()).toUpperCase();
 	}
 }
