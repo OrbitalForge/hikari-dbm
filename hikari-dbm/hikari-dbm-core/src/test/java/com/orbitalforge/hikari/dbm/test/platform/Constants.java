@@ -20,4 +20,14 @@ public class Constants {
 	public static final String ALTER_TABLE_FK = "ALTER TABLE sSchema.sTable ADD CONSTRAINT FK_fkName FOREIGN KEY (sField) REFERENCES tSchema.tTable(tField);";
 	public static final String ALTER_TABLE_UQ = "ALTER TABLE sSchema.sTable ADD CONSTRAINT UQ_uqName UNIQUE (sField);";
 	public static final String BASIC_COLUMN = "\"TEST\" nvarchar(MAX) NOT NULL";
+	public static final String[] BASIC_TABLE = new String[] { 
+		"CREATE TABLE account ( ",
+		"id bigint NOT NULL, ",
+		"kubo varchar(767) NOT NULL, ",
+		"monies decimal(18,4) NOT NULL );",
+		"ALTER TABLE account ADD CONSTRAINT UQ_SAMPLE UNIQUE (kubo);",
+		"ALTER TABLE account ADD CONSTRAINT PK_sample PRIMARY KEY (id);",
+		"ALTER TABLE account MODIFY id bigint AUTO_INCREMENT;",
+		"ALTER TABLE account ALTER COLUMN kubo SET DEFAULT 'Quality';"
+	};
 }

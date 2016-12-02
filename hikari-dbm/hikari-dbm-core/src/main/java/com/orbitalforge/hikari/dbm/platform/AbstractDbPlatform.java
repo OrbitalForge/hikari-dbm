@@ -216,12 +216,13 @@ public abstract class AbstractDbPlatform {
     	boolean and = false;
     	while(defs.hasNext()) {
     		ColumnDefinition def = defs.next();
-    		
-    		if(and) {
-    			writer.write(Helpers.EOL);
-    		} else { and = true; }
-    		
-    		if(def.getIsAutoIncrement()) writeAutoIncrement(def, writer);
+    		if(def.getIsAutoIncrement()) {
+	    		if(and) {
+	    			writer.write(Helpers.EOL);
+	    		} else { and = true; }
+	    		
+	    		writeAutoIncrement(def, writer);
+    		}
     	}
     	
     	return writer;
@@ -260,12 +261,13 @@ public abstract class AbstractDbPlatform {
     	boolean and = false;
     	while(defs.hasNext()) {
     		ColumnDefinition def = defs.next();
-    		
-    		if(and) {
-    			writer.write(Helpers.EOL);
-    		} else { and = true; }
-    		
-    		if(def.getDefaultValue() != null) writeDefault(def, writer);
+    		if(def.getDefaultValue() != null) {
+	    		if(and) {
+	    			writer.write(Helpers.EOL);
+	    		} else { and = true; }
+	    		
+	    		writeDefault(def, writer);
+    		}
     	}
     	
     	return writer;
