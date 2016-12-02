@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.orbitalforge.hikari.dbm.db.AbstractDbService;
 import com.orbitalforge.hikari.dbm.exception.HikariDbmException;
 import com.orbitalforge.hikari.dbm.schemaframework.ColumnDefinition;
@@ -29,23 +32,20 @@ import com.orbitalforge.hikari.dbm.schemaframework.TableDefinition;
 import com.orbitalforge.hikari.dbm.schemaframework.UniqueConstraint;
 
 public class ConsoleTester {
-
+	public static final Logger LOG = LoggerFactory.getLogger(ConsoleTester.class);
+	
 	public static void main(String[] args) throws HikariDbmException, IOException, SQLException {
+		LOG.debug("ENTER MAIN");
 		AbstractDbService service = new AbstractDbService();	
 		SchemaManager sm = service.getSchemaManager();
 		sm.createTable(createSampleTable());
 		sm.getTableNames();
 		
 		for(String table : sm.getTableNames()) {
-			System.out.println(table);
 			String[] qualifier = table.split("\\.");
-			
 			TableDefinition def = sm.getTable(
 					qualifier[0].replaceAll("\"", ""), 
 					qualifier[1].replaceAll("\"", ""));
-			
-			System.out.println(def.getSchema());
-			System.out.println(def.getName());
 		}
 	}
 	

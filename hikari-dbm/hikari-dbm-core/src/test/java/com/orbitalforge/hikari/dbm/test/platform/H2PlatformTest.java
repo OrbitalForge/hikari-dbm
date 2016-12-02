@@ -53,7 +53,6 @@ public class H2PlatformTest {
 				table.setName("sampleTable");
 				types.put(field.getInt(null), field.getName());
 				table.addColumn(createColumn("col_" + table.getColumns().length, field.getInt(null)));
-				System.out.println(service.getPlatform().writeTable(table, new StringWriter()).toString());
 				service.getSchemaManager().createTable(table);
 				dropSampleTable();
 			}

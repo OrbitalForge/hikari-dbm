@@ -43,15 +43,11 @@ public class SchemaManagerTest {
 		sm.getTableNames();
 		
 		for(String table : sm.getTableNames()) {
-			System.out.println(table);
 			String[] qualifier = table.split("\\.");
 			
 			TableDefinition def = sm.getTable(
 					qualifier[0].replaceAll("\"", ""), 
 					qualifier[1].replaceAll("\"", ""));
-			
-			System.out.println(def.getSchema());
-			System.out.println(def.getName());
 		}
 	}
 }

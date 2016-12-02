@@ -22,7 +22,6 @@ public class H2Platform extends AbstractDbPlatform {
 	@Override
 	protected void setup() {
 		setupDataTypes();
-		System.out.println("SETUP CALLED!");
 	}
 	
 	private void setupDataTypes() {

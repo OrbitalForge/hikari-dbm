@@ -8,15 +8,20 @@ import java.sql.Types;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.orbitalforge.hikari.dbm.db.AbstractDbService;
 import com.orbitalforge.hikari.dbm.exception.DbTypeNotMappedException;
 import com.orbitalforge.hikari.dbm.exception.HikariDbmException;
 import com.orbitalforge.hikari.dbm.exception.MissingParameterException;
 import com.orbitalforge.hikari.dbm.schemaframework.ColumnDefinition;
 
 public class ColumnGenerationTest extends GeneratorTest {
+	public static final Logger LOG = LoggerFactory.getLogger(ColumnGenerationTest.class);
+	
 	@Test
 	public void test_baseColumnGenerationExceptions() throws HikariDbmException, IOException {
 		Writer writer = new StringWriter();
@@ -97,9 +102,9 @@ public class ColumnGenerationTest extends GeneratorTest {
 		for(int key : types.keySet()) {
 			try {
 				test_dbTypeNotMapped(key, types.get(key));
-				System.out.println(String.format("test_dbTypeNotMapped(): %s is not mapped.", types.get(key)));
+				LOG.debug(String.format("test_dbTypeNotMapped(): %s is not mapped.", types.get(key)));
 			} catch (IOException e) {
-				System.out.println(String.format("%s is mapped.", types.get(key)));
+				LOG.debug(String.format("%s is mapped.", types.get(key)));
 			}
 		}
 	}

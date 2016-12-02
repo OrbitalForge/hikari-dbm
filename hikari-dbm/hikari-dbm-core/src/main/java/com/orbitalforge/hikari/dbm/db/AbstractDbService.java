@@ -22,6 +22,9 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.orbitalforge.hikari.dbm.platform.AbstractDbPlatform;
 import com.orbitalforge.hikari.dbm.schemaframework.SchemaManager;
 import com.zaxxer.hikari.HikariDataSource;
@@ -35,6 +38,7 @@ import com.zaxxer.hikari.HikariDataSource;
  * a given database implementation.
  */
 public class AbstractDbService {
+	public static final Logger LOG = LoggerFactory.getLogger(AbstractDbService.class);
 	/**
 	 * Internal Connection
 	 */
@@ -77,6 +81,7 @@ public class AbstractDbService {
 			throw new RuntimeException(e);
 		}
        
+		LOG.debug("HikariDBM Started");
 	}
 	
 	public SchemaManager getSchemaManager() {
