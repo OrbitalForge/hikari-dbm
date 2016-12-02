@@ -33,25 +33,20 @@ import com.orbitalforge.hikari.dbm.db.Helpers;
 	NUMERIC_SCALE
  */
 
-public class ColumnDefinition extends DatabaseObjectDefinition {
+public class ColumnDefinition extends TableObjectDefinition {
+	public static final String PROPERTY_COLUMN_NAME = "column_name";
+	
 	public ColumnDefinition(Map<String, Object> data) {
-		if(data.containsKey("column_name")) setName((String)data.get("column_name"));
-		if(data.containsKey("is_nullable")) setIsNullable(Helpers.parseBoolean(data.get("is_nullable")));
-		// TODO: DATA TYPE PARSER
-		if(data.containsKey("character_maximum_length")) setLength((Integer)data.get("character_maximum_length"));
-		if(data.containsKey("numeric_precision")) setPrecision((Integer)data.get("numeric_precision"));
-		if(data.containsKey("numeric_scale")) setScale((Integer)data.get("numeric_scale"));
+		super();
+		properties = data;
 	}
 	
 	public ColumnDefinition() {
 		super();
 	}
 	
-	public String getSchema() { return getProperty("schema", ""); }
-	public void setSchema(String value) { setProperty("schema", value); }
-	
-	public String getTable() { return getProperty("table"); }
-	public void setTable(String value) { setProperty("table", value); }
+	public String getColumnName() { return getProperty(PROPERTY_COLUMN_NAME); }
+	public void setColumnName(String value) { setProperty(PROPERTY_COLUMN_NAME, value); }
 	
 	public boolean getIsAutoIncrement() { return getProperty("isAutoIncrement", false); }
 	public void setIsAutoIncrement(boolean value) { setProperty("isAutoIncrement", value); }

@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import com.orbitalforge.hikari.dbm.platform.AbstractDbPlatform;
 import com.orbitalforge.hikari.dbm.schemaframework.SchemaManager;
+import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 /**
@@ -42,53 +43,70 @@ public class AbstractDbService {
 	/**
 	 * Internal Connection
 	 */
-	protected final HikariDataSource ds = new HikariDataSource();
+	protected final HikariDataSource dataSource;
 	protected final AbstractDbPlatform platform;
 	protected final SchemaManager schemaManager;
-	
-	public DataSource getDataSource() {
-		return ds;
-	}
-	
-	public AbstractDbService() {
-        ds.setMaximumPoolSize(20);
-        ds.setAutoCommit(false);
-        
-        Properties prop = new Properties();
-		String propFileName = "db.properties";
-		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
+	protected final Properties properties;
+	private boolean logSql = false;
 
-		try {
-			prop.load(inputStream);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-        ds.setDriverClassName(prop.getProperty("db.classname"));
-        ds.setJdbcUrl(prop.getProperty("db.jdbcConnection"));
-        ds.addDataSourceProperty("user", prop.getProperty("db.user"));
-        ds.addDataSourceProperty("password", prop.getProperty("db.password"));
-        
-        /* Setup Schema Manager */
-        schemaManager = new SchemaManager(this);
-        
+	public AbstractDbService() {
+		properties = loadProperties("hikari.dbm.properties");
+        dataSource = new HikariDataSource(getHikariCpConfig());
+
         /* Setup Db Platform */
 		try {
-			Class<?> clazz = Class.forName(prop.getProperty("db.platformClass"));
+			Class<?> clazz = Class.forName(getProperty("hikari.dbm.platformClass"));
 			platform = (AbstractDbPlatform)clazz.newInstance();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
        
-		LOG.debug("HikariDBM Started");
+        /* Setup Schema Manager */
+        schemaManager = new SchemaManager(this);
+	}
+	private Properties loadProperties(String file) {
+		return loadResourceToProperties(file);
 	}
 	
-	public SchemaManager getSchemaManager() {
-		return schemaManager;
+	public static Properties loadResourceToProperties(final String path) {
+	    final InputStream stream =
+	        Thread
+			    .currentThread()
+			    .getContextClassLoader()
+			    .getResourceAsStream(path);
+	    
+		try {
+			Properties props = new Properties();
+			props.load(stream);
+			stream.close();
+			return props;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
-
-	public AbstractDbPlatform getPlatform() {
-		return platform;
+	
+	private HikariConfig getHikariCpConfig() {
+		Properties props = new Properties();
+		
+		for(Object key : properties.keySet()) {
+			if(key instanceof String && 
+					((String)key).startsWith("dataSource")){
+				props.setProperty((String)key, (String) properties.get((String)key));
+			}
+		}
+		
+		HikariConfig config = new HikariConfig(props);
+		config.setPoolName("hikari-dbm");
+		return config;
 	}
+	
+	private String getProperty(String key, String defualtValue) { return (String)this.properties.getOrDefault(key, defualtValue); }
+	private String getProperty(String key) { return (String)this.properties.getProperty(key); }
+	
+	public DataSource getDataSource() { return dataSource; }
+	public SchemaManager getSchemaManager() { return schemaManager; }
+	public AbstractDbPlatform getPlatform() { return platform; }
+	
+	public void setLogSql(boolean value) { logSql = value; }
+	public boolean getLogSql() { return logSql; }
 }

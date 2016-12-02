@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import org.h2.jdbcx.JdbcDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,12 +36,11 @@ public class ConsoleTester {
 	public static final Logger LOG = LoggerFactory.getLogger(ConsoleTester.class);
 	
 	public static void main(String[] args) throws HikariDbmException, IOException, SQLException {
-		LOG.debug("ENTER MAIN");
 		AbstractDbService service = new AbstractDbService();	
 		SchemaManager sm = service.getSchemaManager();
 		sm.createTable(createSampleTable());
 		sm.getTableNames();
-		
+
 		for(String table : sm.getTableNames()) {
 			String[] qualifier = table.split("\\.");
 			TableDefinition def = sm.getTable(
@@ -51,23 +51,23 @@ public class ConsoleTester {
 	
 	public static TableDefinition createSampleTable() {
 		TableDefinition table = new TableDefinition();
-		table.setName("account");
+		table.setTableName("account");
 		// table.setQualifier("\"forge");
 		
 		ColumnDefinition def1 = new ColumnDefinition();
-		def1.setName("id");
+		def1.setColumnName("id");
 		def1.setDbType(Types.BIGINT);
 		def1.setIsAutoIncrement(true);
 		def1.setIsNullable(false);
 		
 		ColumnDefinition def2 = new ColumnDefinition();
 		def2.setDbType(Types.VARCHAR);
-		def2.setName("kubo");
+		def2.setColumnName("kubo");
 		def2.setLength(767);
 		def2.setDefaultValue("'Quality'");
 		
 		ColumnDefinition def3 = new ColumnDefinition();
-		def3.setName("monies");
+		def3.setColumnName("monies");
 		def3.setDbType(Types.DECIMAL);
 		
 		table.addColumn(def1);
@@ -75,12 +75,12 @@ public class ConsoleTester {
 		table.addColumn(def3);
 		
 		UniqueConstraint uq = new UniqueConstraint();
-		uq.setName("SAMPLE");
+		uq.setConstraintName("SAMPLE");
 		uq.setFields("kubo");
 		table.addConstraint(uq);
 		
 		PrimaryKeyConstraint pk = new PrimaryKeyConstraint();
-		pk.setName("sample");
+		pk.setConstraintName("sample");
 		pk.setFields("id");
 		
 		table.addConstraint(pk);

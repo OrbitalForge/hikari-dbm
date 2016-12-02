@@ -37,7 +37,7 @@ public class ConstraintGenerationTest extends GeneratorTest {
 		} 
 		catch (MissingParameterException ex) {}	
 		
-		g.setName("unique");
+		g.setConstraintName("unique");
 		
 		try { 
 			platform.writeConstraint(g, new StringWriter()).toString();
@@ -45,31 +45,31 @@ public class ConstraintGenerationTest extends GeneratorTest {
 		} 
 		catch (MissingParameterException ex) {}	
 		
-		Assert.assertEquals(null, g.getTable());
-		g.setTable("sTable");
-		Assert.assertEquals("sTable", g.getTable());
+		Assert.assertEquals(null, g.getTableName());
+		g.setTableName("sTable");
+		Assert.assertEquals(g.getTableName(), "sTable");
 		
-		Assert.assertEquals("", g.getSchema());
+		Assert.assertEquals("", g.getSchemaName());
 		try { platform.writeConstraint(g, new StringWriter()); }
 		catch(UnknownConstraintException e ) { }
 		
-		Assert.assertEquals("", g.getSchema());
-		g.setSchema("sSchema");		
-		Assert.assertEquals("sSchema", g.getSchema());
+		Assert.assertEquals("", g.getSchemaName());
+		g.setSchemaName("sSchema");		
+		Assert.assertEquals("sSchema", g.getSchemaName());
 	}
 	
 	@Test
 	public void test_genericConstraintPrefix() {
 		GenericConstraint g = new GenericConstraint();
-		g.setName("test0");
+		g.setConstraintName("test0");
 		Assert.assertEquals(g.getConstraintIdentifier(), "GENERIC_test0");
-		g.setName("generic_test1");
+		g.setConstraintName("generic_test1");
 		Assert.assertEquals(g.getConstraintIdentifier(), "generic_test1");
 		
-		g.setName("gEnErIc_test2");
+		g.setConstraintName("gEnErIc_test2");
 		Assert.assertEquals(g.getConstraintIdentifier(), "gEnErIc_test2");
 		
-		g.setName("gen_prefix_test3");
+		g.setConstraintName("gen_prefix_test3");
 		Assert.assertEquals(g.getConstraintIdentifier(), "gen_prefix_test3");
 	}
 	
@@ -87,8 +87,8 @@ public class ConstraintGenerationTest extends GeneratorTest {
 		Assert.assertEquals("tTable", fk.getTargetTable());
 		Assert.assertEquals("tField", fk.getTargetField());
 		
-		fk.setSchema("sSchema");
-		fk.setTable("sTable");
+		fk.setSchemaName("sSchema");
+		fk.setTableName("sTable");
 		
 		Assert.assertEquals(Constants.ALTER_TABLE_FK, platform.writeConstraint(fk, new StringWriter()).toString());
 	}
@@ -97,9 +97,9 @@ public class ConstraintGenerationTest extends GeneratorTest {
 	public void test_writeUniqueConstraint() throws Exception {
 		platform.setIdentifierFormat("%s");
 		UniqueConstraint uq = new UniqueConstraint();
-		uq.setName("uqName");
-		uq.setSchema("sSchema");
-		uq.setTable("sTable");
+		uq.setConstraintName("uqName");
+		uq.setSchemaName("sSchema");
+		uq.setTableName("sTable");
 		
 		try { platform.writeConstraint(uq, new StringWriter()); }
 		catch(MissingParameterException e ) { }
@@ -112,9 +112,9 @@ public class ConstraintGenerationTest extends GeneratorTest {
 	public void test_writePrimaryKeyConstraint() throws Exception {
 		platform.setIdentifierFormat("%s");
 		PrimaryKeyConstraint pk = new PrimaryKeyConstraint();
-		pk.setName("pkName");
-		pk.setSchema("sSchema");
-		pk.setTable("sTable");
+		pk.setConstraintName("pkName");
+		pk.setSchemaName("sSchema");
+		pk.setTableName("sTable");
 		
 		try { platform.writeConstraint(pk, new StringWriter()); }
 		catch(MissingParameterException e ) { }

@@ -16,26 +16,24 @@ package com.orbitalforge.hikari.dbm.schemaframework;
  * limitations under the License.
  */
 
-public abstract class Constraint extends DatabaseObjectDefinition {
+public abstract class Constraint extends TableObjectDefinition {
 	public abstract String getConstraintType();
+	public static final String PROPERTY_CONSTRAINT_NAME = "constraint_name";
 	
-	public String getSchema() { return getProperty("schema", ""); }
-	public void setSchema(String value) { setProperty("schema", value); }
-	
-	public String getTable() { return getProperty("table"); }
-	public void setTable(String value) { setProperty("table", value); }
-	
+	public String getConstraintName() { return getProperty(PROPERTY_CONSTRAINT_NAME, ""); }
+	public void setConstraintName(String value) { setProperty(PROPERTY_CONSTRAINT_NAME, value); }
+		
 	private String getNamePrefix() {
-		return getName().split("_")[0];
+		return getConstraintName().split("_")[0];
 	}
 	
 	private boolean hasPrefix() {
-		return (getNamePrefix().toLowerCase() != getName());
+		return (getNamePrefix().toLowerCase() != getConstraintName());
 	}
 	
 	public String getConstraintIdentifier() {
 		// If the constraint already has a prefix added, just return the name
-		if(hasPrefix()) return getName();
-		return String.format("%s_%s", getConstraintType(), getName());
+		if(hasPrefix()) return getConstraintName();
+		return String.format("%s_%s", getConstraintType(), getConstraintName());
 	}
 }

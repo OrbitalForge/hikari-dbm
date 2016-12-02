@@ -26,7 +26,7 @@ public class H2PlatformTest {
 	
 	public static ColumnDefinition createColumn(String name, int type) {
 		ColumnDefinition def = new ColumnDefinition();
-		def.setName(name);
+		def.setColumnName(name);
 		def.setDbType(type);
 		return def;
 	}
@@ -50,7 +50,7 @@ public class H2PlatformTest {
 		for(Field field : fields) {
 			if(service.getPlatform().isTypeMapped(field.getInt(null))) {
 				TableDefinition table = new TableDefinition();
-				table.setName("sampleTable");
+				table.setTableName("sampleTable");
 				types.put(field.getInt(null), field.getName());
 				table.addColumn(createColumn("col_" + table.getColumns().length, field.getInt(null)));
 				service.getSchemaManager().createTable(table);

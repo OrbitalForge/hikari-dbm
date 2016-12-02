@@ -19,25 +19,21 @@ package com.orbitalforge.hikari.dbm.schemaframework;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class TableDefinition extends DatabaseObjectDefinition {
+public class TableDefinition extends TableObjectDefinition {
 	private final Map<String, ColumnDefinition> columns = new LinkedHashMap<String, ColumnDefinition>();
 	private final Map<String, Constraint> constraints = new LinkedHashMap<String, Constraint>();
 	
 	/* Constructors */
 	public TableDefinition(Map<String, Object> data) {
-		if(data.containsKey("table_name")) setName((String)data.get("table_name"));
-		if(data.containsKey("table_schema")) setSchema((String)data.get("table_schema"));
+		this();
+		properties = data; // Sets the internal object without needing to do "additional" mapping.
 	}
 	
 	public TableDefinition() {
 		super();
 	}
 	/* ------------- */
-	
-	/* Properties */
-	public String getSchema() { return getProperty("schema", ""); }
-	public void setSchema(String value) { setProperty("schema", value); }
-	
+		
     /* Column Methods */
     public TableDefinition removeColumn(String column) {
 		// TODO: Track changes and persist to database.
@@ -46,13 +42,13 @@ public class TableDefinition extends DatabaseObjectDefinition {
 	}
 	
 	public TableDefinition addColumn(ColumnDefinition column) {
-		if(columns.containsKey(column.getName())) {
+		if(columns.containsKey(column.getColumnName())) {
 			throw new RuntimeException("Column Exists");
 		}
 		// This will populate the table name and schema
-		column.setSchema(getSchema());
-		column.setTable(getName());
-		columns.put(column.getName(), column);
+		column.setSchemaName(getSchemaName());
+		column.setTableName(getTableName());
+		columns.put(column.getColumnName(), column);
 		return this;
 	}
 	
@@ -80,8 +76,8 @@ public class TableDefinition extends DatabaseObjectDefinition {
 		}
 		
 		// Naively assumes schema and table name are already set.
-		constraint.setSchema(getSchema());
-		constraint.setTable(getName());
+		constraint.setSchemaName(getSchemaName());
+		constraint.setTableName(getTableName());
 		constraints.put(constraint.getConstraintIdentifier(), constraint);
     }
 	

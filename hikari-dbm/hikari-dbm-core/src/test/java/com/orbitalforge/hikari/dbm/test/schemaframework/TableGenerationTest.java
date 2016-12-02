@@ -20,23 +20,23 @@ public class TableGenerationTest extends GeneratorTest {
 	
 	public static TableDefinition createSampleTable() {
 		TableDefinition table = new TableDefinition();
-		table.setName("account");
+		table.setTableName("account");
 		// table.setQualifier("\"forge");
 		
 		ColumnDefinition def1 = new ColumnDefinition();
-		def1.setName("id");
+		def1.setColumnName("id");
 		def1.setDbType(Types.BIGINT);
 		def1.setIsAutoIncrement(true);
 		def1.setIsNullable(false);
 		
 		ColumnDefinition def2 = new ColumnDefinition();
 		def2.setDbType(Types.VARCHAR);
-		def2.setName("kubo");
+		def2.setColumnName("kubo");
 		def2.setLength(767);
 		def2.setDefaultValue("'Quality'");
 		
 		ColumnDefinition def3 = new ColumnDefinition();
-		def3.setName("monies");
+		def3.setColumnName("monies");
 		def3.setDbType(Types.DECIMAL);
 		
 		table.addColumn(def1);
@@ -44,12 +44,12 @@ public class TableGenerationTest extends GeneratorTest {
 		table.addColumn(def3);
 		
 		UniqueConstraint uq = new UniqueConstraint();
-		uq.setName("SAMPLE");
+		uq.setConstraintName("SAMPLE");
 		uq.setFields("kubo");
 		table.addConstraint(uq);
 		
 		PrimaryKeyConstraint pk = new PrimaryKeyConstraint();
-		pk.setName("sample");
+		pk.setConstraintName("sample");
 		pk.setFields("id");
 		
 		table.addConstraint(pk);
@@ -72,11 +72,11 @@ public class TableGenerationTest extends GeneratorTest {
 		Assert.assertNull(table.getColumn("badIdentifier"));
 		
 		ColumnDefinition def = new ColumnDefinition();
-		def.setName("monies");
+		def.setColumnName("monies");
 		def.setDbType(Types.NVARCHAR);
 		
 		PrimaryKeyConstraint pk = new PrimaryKeyConstraint();
-		pk.setName("sample");
+		pk.setConstraintName("sample");
 		pk.setFields("id");
 		
 		boolean exceptionCalled = false;
@@ -88,11 +88,11 @@ public class TableGenerationTest extends GeneratorTest {
 		Assert.assertTrue(exceptionCalled);
 		
 		ColumnDefinition def1 = new ColumnDefinition();
-		def1.setName("monies1");
+		def1.setColumnName("monies1");
 		def1.setDbType(Types.NVARCHAR);
 		
 		ColumnDefinition def2 = new ColumnDefinition();
-		def2.setName("monies2");
+		def2.setColumnName("monies2");
 		def2.setDbType(Types.NVARCHAR);
 		
 		table.addColumns(new ColumnDefinition[] { def1, def2 });
@@ -116,16 +116,16 @@ public class TableGenerationTest extends GeneratorTest {
 		data.put("table_schema", "_table_schema");
 		
 		TableDefinition table = new TableDefinition(data);
-		Assert.assertEquals(table.getName(), "_table_name");
-		Assert.assertEquals(table.getSchema(), "_table_schema");
+		Assert.assertEquals(table.getTableName(), "_table_name");
+		Assert.assertEquals(table.getSchemaName(), "_table_schema");
 		
-		table.setSchema("test_value");
-		Assert.assertEquals(table.getSchema(), "test_value");
+		table.setSchemaName("test_value");
+		Assert.assertEquals(table.getSchemaName(), "test_value");
 		
 		data.clear();
 		table = new TableDefinition(data);
-		Assert.assertNull(table.getName());
+		Assert.assertNull(table.getTableName());
 		// Schema is not always present so it should not impact the downstream identifier joins.
-		Assert.assertEquals(table.getSchema(), "");
+		Assert.assertEquals(table.getSchemaName(), "");
 	}
 }

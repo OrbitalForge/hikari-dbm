@@ -41,7 +41,4 @@ public abstract class DatabaseObjectDefinition {
 	protected void setProperty(String key, Object value) {
 		properties.put(key, value);
 	}
-	
-	public String getName() { return getProperty("name"); }
-	public void setName(String value) { setProperty("name", value); }
 }

@@ -27,6 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.orbitalforge.hikari.dbm.InternalLogger;
 import com.orbitalforge.hikari.dbm.db.AbstractDbQueries;
 import com.orbitalforge.hikari.dbm.db.AbstractDbService;
 import com.orbitalforge.hikari.dbm.db.Helpers;
@@ -34,6 +38,7 @@ import com.orbitalforge.hikari.dbm.db.NamedParameterStatement;
 import com.orbitalforge.hikari.dbm.exception.HikariDbmException;
 
 public class SchemaManager {
+	public static final Logger LOG = LoggerFactory.getLogger(SchemaManager.class);
 	
 	private final AbstractDbService dbService;
 	
@@ -58,6 +63,7 @@ public class SchemaManager {
 		
 		NamedParameterStatement nps = new NamedParameterStatement(connection, AbstractDbQueries.GET_TABLES);
 		addNamedParameters(dbService, connection, nps);
+		InternalLogger.logSqlStatement(LOG, nps);
 		
 		ResultSet queryResults = nps.executeQuery();
 		ArrayList<String> results = new ArrayList<String>();

@@ -26,7 +26,7 @@ public class ColumnGenerationTest extends GeneratorTest {
 	public void test_baseColumnGenerationExceptions() throws HikariDbmException, IOException {
 		Writer writer = new StringWriter();
 		ColumnDefinition column = new ColumnDefinition();
-		column.setName("TEST");
+		column.setColumnName("TEST");
 		column.setDbType(Types.NVARCHAR);
 		
 		platform.writeColumn(column, writer);
@@ -149,7 +149,7 @@ public class ColumnGenerationTest extends GeneratorTest {
 	public void test_columnDefaultValue() throws HikariDbmException, IOException {
 		platform.setIdentifierFormat("%s");
 		ColumnDefinition column = new ColumnDefinition();
-		column.setName("TEST");
+		column.setColumnName("TEST");
 		column.setDbType(Types.NVARCHAR);
 		
 		boolean exception_thrown = false;
@@ -157,8 +157,8 @@ public class ColumnGenerationTest extends GeneratorTest {
 		catch (MissingParameterException e) { exception_thrown = true; }
 		Assert.assertEquals(exception_thrown, true, "Expected a MissingParameterException");
 		
-		column.setTable("sTable");
-		column.setSchema("sSchema");
+		column.setTableName("sTable");
+		column.setSchemaName("sSchema");
 		
 		Assert.assertEquals(platform.writeDefault(column, new StringWriter()).toString(), Constants.COLUMN_NULL_DEFAULT);
 		

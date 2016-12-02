@@ -28,7 +28,7 @@ public class ForeignKeyConstraint extends Constraint {
 			String name, 
 			String sourceField, 
 			String targetSchema, String targetTable, String targetField) {
-		setName(name);
+		setConstraintName(name);
 		setField(sourceField);
 		setTargetSchema(targetSchema);
 		setTargetTable(targetTable);

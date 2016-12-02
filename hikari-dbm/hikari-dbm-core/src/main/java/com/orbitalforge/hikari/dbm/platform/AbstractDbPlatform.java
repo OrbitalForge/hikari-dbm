@@ -149,10 +149,10 @@ public abstract class AbstractDbPlatform {
 	}
 
 	public Writer writeColumn(ColumnDefinition column, Writer writer) throws HikariDbmException, IOException {
-		if(Helpers.isNullOrEmpty(column.getName())) throw new MissingParameterException("The name is not set for this column");
-		if(column.getDbType() == Integer.MIN_VALUE) throw new MissingParameterException("The column type is not set for " + column.getName());
+		if(Helpers.isNullOrEmpty(column.getColumnName())) throw new MissingParameterException("The name is not set for this column");
+		if(column.getDbType() == Integer.MIN_VALUE) throw new MissingParameterException("The column type is not set for " + column.getColumnName());
 		
-		writer.write(this.escapeIdentifier(column.getName()));
+		writer.write(this.escapeIdentifier(column.getColumnName()));
 		writer.write(" ");
 		writeDbType(column, writer);
 		if (!column.getIsNullable()) writer.write(" NOT NULL");
@@ -166,7 +166,7 @@ public abstract class AbstractDbPlatform {
 	public Writer writeTable(TableDefinition table, Writer writer) throws HikariDbmException, IOException {
 		writer.write("CREATE TABLE ");
 		// TODO: Add schema prefix ...
-		writer.write(joinIdentifiers(table.getName()));
+		writer.write(joinIdentifiers(table.getTableName()));
 		writer.write(" ( ");
 		writer.write(Helpers.EOL);
 
@@ -244,7 +244,7 @@ public abstract class AbstractDbPlatform {
      */
     public void writeAutoIncrement(ColumnDefinition column, Writer writer) throws DbTypeNotMappedException, IOException {
     	// ALTER TABLE `document` MODIFY `document_id` INT AUTO_INCREMENT;
-    	writeAlterColumn(column.getSchema(), column.getTable(), column.getName(), "MODIFY", writer);
+    	writeAlterColumn(column.getSchemaName(), column.getTableName(), column.getColumnName(), "MODIFY", writer);
     	writeDbType(column, writer);
     	writer.write(" AUTO_INCREMENT;");
 	}
@@ -287,8 +287,8 @@ public abstract class AbstractDbPlatform {
     	// MSSQL, Oracle and MariaDb do not support named constraints for default - this is exclusively MSSQL
     	// Fun fact - MSSQL does not support the above ALTER TABLE but rather it likes the ADD CONSTRAINT
     	// method of default values ... therefore ... WEIRD!
-    	if(Helpers.isNullOrEmpty(column.getTable())) throw new MissingParameterException("Mssing Table Name");
-    	writeAlterColumn(column.getSchema(), column.getTable(), column.getName(), "ALTER COLUMN", writer);
+    	if(Helpers.isNullOrEmpty(column.getTableName())) throw new MissingParameterException("Mssing Table Name");
+    	writeAlterColumn(column.getSchemaName(), column.getTableName(), column.getColumnName(), "ALTER COLUMN", writer);
     	String defaultValue = convertDefaultValue(column.getDefaultValue());
     	writer.write("SET DEFAULT ");
     	writer.write(defaultValue);
@@ -325,8 +325,8 @@ public abstract class AbstractDbPlatform {
     	String constraintType = "";
     	String genMods = "";
 
-    	if(Helpers.isNullOrEmpty(constraint.getTable())) throw new MissingParameterException("Table Name");
-    	if(Helpers.isNullOrEmpty(constraint.getName())) throw new MissingParameterException("Constraint Name");
+    	if(Helpers.isNullOrEmpty(constraint.getTableName())) throw new MissingParameterException("Table Name");
+    	if(Helpers.isNullOrEmpty(constraint.getConstraintName())) throw new MissingParameterException("Constraint Name");
     	
         switch(constraint.getConstraintType())
         {
@@ -381,8 +381,8 @@ public abstract class AbstractDbPlatform {
         }
         
         String result = String.format("ALTER TABLE %s ADD CONSTRAINT %s_%s %s %s;", 
-        		joinIdentifiers(constraint.getSchema(), constraint.getTable()), prefix, 
-        		constraint.getName(), constraintType, genMods);
+        		joinIdentifiers(constraint.getSchemaName(), constraint.getTableName()), prefix, 
+        		constraint.getConstraintName(), constraintType, genMods);
 		writer.write(result);
         return writer;
 	}
