@@ -25,7 +25,6 @@ import com.orbitalforge.hikari.dbm.db.AbstractDbService;
 import com.orbitalforge.hikari.dbm.exception.HikariDbmException;
 import com.orbitalforge.hikari.dbm.schemaframework.SchemaManager;
 import com.orbitalforge.hikari.dbm.schemaframework.TableDefinition;
-import com.orbitalforge.hikari.dbm.test.platform.TableGenerationTest;
 
 /**
  * These tests are more "Integration Tests" using a memory only database.

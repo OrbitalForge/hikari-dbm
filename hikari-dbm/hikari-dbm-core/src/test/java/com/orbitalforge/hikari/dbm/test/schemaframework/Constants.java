@@ -1,4 +1,4 @@
-package com.orbitalforge.hikari.dbm.test.platform;
+package com.orbitalforge.hikari.dbm.test.schemaframework;
 
 /*
  * Copyright (C) 2016 Travis Sharp <furiousscissors@gmail.com>
@@ -20,7 +20,7 @@ public class Constants {
 	public static final String ALTER_TABLE_FK = "ALTER TABLE sSchema.sTable ADD CONSTRAINT FK_fkName FOREIGN KEY (sField) REFERENCES tSchema.tTable(tField);";
 	public static final String ALTER_TABLE_UQ = "ALTER TABLE sSchema.sTable ADD CONSTRAINT UQ_uqName UNIQUE (sField);";
 	public static final String ALTER_TABLE_PK = "ALTER TABLE sSchema.sTable ADD CONSTRAINT PK_pkName PRIMARY KEY (sField);";
-	public static final String BASIC_COLUMN = "\"TEST\" nvarchar(MAX) NOT NULL";
+	public static final String BASIC_COLUMN = "\"TEST\" nvarchar(MAX)";
 	public static final String COLUMN_NULL_DEFAULT = "ALTER TABLE sSchema.sTable ALTER COLUMN TEST SET DEFAULT NULL;";
 	public static final String COLUMN_BASIC_DEFAULT = "ALTER TABLE sSchema.sTable ALTER COLUMN TEST SET DEFAULT 'String Value';";
 	public static final String COLUMN_NUMERIC_DEFAULT = "ALTER TABLE sSchema.sTable ALTER COLUMN TEST SET DEFAULT 15.0;";
@@ -28,8 +28,8 @@ public class Constants {
 	public static final String[] BASIC_TABLE = new String[] { 
 		"CREATE TABLE account ( ",
 		"id bigint NOT NULL, ",
-		"kubo varchar(767) NOT NULL, ",
-		"monies decimal(18,4) NOT NULL );",
+		"kubo varchar(767), ",
+		"monies decimal(18,4) );",
 		"ALTER TABLE account ADD CONSTRAINT UQ_SAMPLE UNIQUE (kubo);",
 		"ALTER TABLE account ADD CONSTRAINT PK_sample PRIMARY KEY (id);",
 		"ALTER TABLE account MODIFY id bigint AUTO_INCREMENT;",

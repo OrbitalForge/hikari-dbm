@@ -150,7 +150,7 @@ public abstract class AbstractDbPlatform {
 
 	public Writer writeColumn(ColumnDefinition column, Writer writer) throws HikariDbmException, IOException {
 		if(Helpers.isNullOrEmpty(column.getName())) throw new MissingParameterException("The name is not set for this column");
-		if(column.getDbType() == -1) throw new MissingParameterException("The column type is not set for " + column.getName());
+		if(column.getDbType() == Integer.MIN_VALUE) throw new MissingParameterException("The column type is not set for " + column.getName());
 		
 		writer.write(this.escapeIdentifier(column.getName()));
 		writer.write(" ");
@@ -394,4 +394,6 @@ public abstract class AbstractDbPlatform {
 		if(defaultValue instanceof Number) return defaultValue.toString();
 		return defaultValue.toString();
 	}
+
+	public boolean isTypeMapped(int type) { return (getColumnType(type) != null); }
 }

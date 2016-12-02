@@ -1,4 +1,4 @@
-package com.orbitalforge.hikari.dbm.test.platform;
+package com.orbitalforge.hikari.dbm.test.schemaframework;
 
 /*
  * Copyright (C) 2016 Travis Sharp <furiousscissors@gmail.com>
@@ -30,10 +30,5 @@ public class GenericPlatform extends AbstractDbPlatform {
 	@Override
 	protected boolean supportsDefaultConstraint() {
 		return false;
-	}
-
-	public boolean isTypeMapped(int int1) {
-		return (getColumnType(int1) != null);
-	}
-	
+	}	
 }

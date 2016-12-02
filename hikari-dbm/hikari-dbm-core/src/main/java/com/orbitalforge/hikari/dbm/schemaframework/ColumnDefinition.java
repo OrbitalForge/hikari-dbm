@@ -56,10 +56,10 @@ public class ColumnDefinition extends DatabaseObjectDefinition {
 	public boolean getIsAutoIncrement() { return getProperty("isAutoIncrement", false); }
 	public void setIsAutoIncrement(boolean value) { setProperty("isAutoIncrement", value); }
 	
-	public boolean getIsNullable() { return getProperty("isNullable", false); }
+	public boolean getIsNullable() { return getProperty("isNullable", true); }
 	public void setIsNullable(boolean value) { setProperty("isNullable", value); }
 	
-	public int getDbType() { return getProperty("dbType", -1); }
+	public int getDbType() { return getProperty("dbType", Integer.MIN_VALUE); }
 	public void setDbType(int type) { setProperty("dbType", type); }
 	
 	public long getLength() { return getProperty("length", 0L); }

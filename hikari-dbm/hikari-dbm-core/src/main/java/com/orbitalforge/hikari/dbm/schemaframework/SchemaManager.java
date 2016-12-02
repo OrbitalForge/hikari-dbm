@@ -45,9 +45,12 @@ public class SchemaManager {
 		Writer writer = dbService.getPlatform().writeTable(table, new StringWriter());
 		Connection connection = dbService.getDataSource().getConnection();
 		Statement statement = connection.createStatement();
-		System.out.println(writer.toString());
+		try {
 		statement.execute(writer.toString());
-		System.out.println(writer.toString());
+		} finally {
+			statement.close();
+			connection.close();
+		}
 	}
 
 	public String[] getTableNames() throws SQLException {

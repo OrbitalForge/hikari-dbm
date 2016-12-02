@@ -1,5 +1,7 @@
 package com.orbitalforge.hikari.dbm.platform;
 
+import java.sql.Types;
+
 /*
  * Copyright (C) 2016 Travis Sharp <furiousscissors@gmail.com>
  *
@@ -18,9 +20,44 @@ package com.orbitalforge.hikari.dbm.platform;
 
 public class H2Platform extends AbstractDbPlatform {
 	@Override
-	public void setup() {
-		// TODO Auto-generated method stub
+	protected void setup() {
+		setupDataTypes();
+		System.out.println("SETUP CALLED!");
+	}
+	
+	private void setupDataTypes() {
+		unregisterAllColumnTypes();
 		
+		// registerColumnType(Types.BIT, "bit");
+		registerColumnType(Types.BOOLEAN, "boolean");
+		registerColumnType(Types.TINYINT, "tinyint");
+		registerColumnType(Types.SMALLINT, "smallint");
+		registerColumnType(Types.INTEGER, "int");
+		registerColumnType(Types.BIGINT, "bigint");
+		registerColumnType(Types.FLOAT, "float");
+		registerColumnType(Types.DECIMAL, "decimal(%p,%s)");
+		registerColumnType(Types.DOUBLE, "double precision");
+		registerColumnType(Types.NUMERIC, "decimal(%p,%s)");
+		registerColumnType(Types.REAL, "real");
+
+		registerColumnType(Types.DATE, "date");
+		registerColumnType(Types.TIME, "time");
+		registerColumnType(Types.TIMESTAMP, "timestamp");
+		// registerColumnType(Types.TIMESTAMP_WITH_TIMEZONE, "TIMESTAMP WITH TIMEZONE");
+
+		registerColumnType(Types.VARBINARY, "varbinary(%l)");
+		registerColumnType(Types.LONGVARBINARY, "longvarbinary(%l)");
+		registerColumnType(Types.BLOB, "blob(%l)");
+
+		registerColumnType(Types.CHAR, "char(%l)");
+		registerColumnType(Types.VARCHAR, "varchar(%l)");
+		registerColumnType(Types.LONGVARCHAR, "varchar(%l)");
+		registerColumnType(Types.CLOB, "clob(%l)");
+
+		registerColumnType(Types.NCHAR, "nchar(%l)");
+		registerColumnType(Types.NVARCHAR, "nvarchar(%l)");
+		registerColumnType(Types.LONGNVARCHAR, "nvarchar(%l)");
+		registerColumnType(Types.NCLOB, "nclob(%l)");
 	}
 
 	@Override

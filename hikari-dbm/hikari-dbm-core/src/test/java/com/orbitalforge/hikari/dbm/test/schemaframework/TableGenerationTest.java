@@ -1,4 +1,4 @@
-package com.orbitalforge.hikari.dbm.test.platform;
+package com.orbitalforge.hikari.dbm.test.schemaframework;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -61,7 +61,7 @@ public class TableGenerationTest extends GeneratorTest {
 	public void test_standardTableGeneration() throws HikariDbmException, IOException {
 		platform.setIdentifierFormat("%s");
 		String[] lines = platform.writeTable(createSampleTable(), new StringWriter()).toString().split(Helpers.EOL);
-		Assert.assertArrayEquals(Constants.BASIC_TABLE, lines);
+		Assert.assertArrayEquals(lines, Constants.BASIC_TABLE);
 	}
 	
 	@Test

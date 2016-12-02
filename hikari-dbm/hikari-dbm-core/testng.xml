@@ -8,11 +8,12 @@
 	</test> <!-- Test -->
 	<test name="SQL Generation">
 		<classes>
-			<class name="com.orbitalforge.hikari.dbm.test.platform.IdentifierTest" />
-			<class name="com.orbitalforge.hikari.dbm.test.platform.ConstraintGenerationTest" />
-			<class name="com.orbitalforge.hikari.dbm.test.platform.ColumnGenerationTest" />
-			<class name="com.orbitalforge.hikari.dbm.test.platform.TableGenerationTest" />
+			<class name="com.orbitalforge.hikari.dbm.test.schemaframework.IdentifierTest" />
+			<class name="com.orbitalforge.hikari.dbm.test.schemaframework.ConstraintGenerationTest" />
+			<class name="com.orbitalforge.hikari.dbm.test.schemaframework.ColumnGenerationTest" />
+			<class name="com.orbitalforge.hikari.dbm.test.schemaframework.TableGenerationTest" />
 			<class name="com.orbitalforge.hikari.dbm.test.schemaframework.SchemaManagerTest" />
+			<class name="com.orbitalforge.hikari.dbm.test.platform.H2PlatformTest" />
 		</classes>
 	</test>
 </suite> <!-- Suite -->

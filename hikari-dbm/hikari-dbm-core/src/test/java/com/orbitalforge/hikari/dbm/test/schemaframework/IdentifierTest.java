@@ -1,4 +1,4 @@
-package com.orbitalforge.hikari.dbm.test.platform;
+package com.orbitalforge.hikari.dbm.test.schemaframework;
 
 /*
  * Copyright (C) 2016 Travis Sharp <furiousscissors@gmail.com>

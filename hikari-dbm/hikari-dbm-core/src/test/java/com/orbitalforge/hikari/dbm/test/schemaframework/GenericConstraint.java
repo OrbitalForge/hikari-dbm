@@ -1,4 +1,4 @@
-package com.orbitalforge.hikari.dbm.test.platform;
+package com.orbitalforge.hikari.dbm.test.schemaframework;
 
 /*
  * Copyright (C) 2016 Travis Sharp <furiousscissors@gmail.com>
@@ -16,15 +16,13 @@ package com.orbitalforge.hikari.dbm.test.platform;
  * limitations under the License.
  */
 
+import com.orbitalforge.hikari.dbm.schemaframework.Constraint;
 
-import org.testng.annotations.BeforeMethod;
+public class GenericConstraint extends Constraint {
 
-public abstract class GeneratorTest {
-	protected GenericPlatform platform;
-	
-	@BeforeMethod
-	protected void setUp() {
-		platform = new GenericPlatform();
-		platform.setIdentifierFormat("\"%s\"");
+	@Override
+	public String getConstraintType() {
+		return "GENERIC";
 	}
+
 }
