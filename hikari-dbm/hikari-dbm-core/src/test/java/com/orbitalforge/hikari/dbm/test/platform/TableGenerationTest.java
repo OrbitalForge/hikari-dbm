@@ -61,4 +61,47 @@ public class TableGenerationTest extends GeneratorTest {
 		String[] lines = platform.writeTable(createSampleTable(), new StringWriter()).toString().split(Helpers.EOL);
 		Assert.assertArrayEquals(Constants.BASIC_TABLE, lines);
 	}
+	
+	@Test
+	public void test_tableColumnTests() throws HikariDbmException, IOException {
+		platform.setIdentifierFormat("%s");
+		TableDefinition table = createSampleTable();
+		Assert.assertNotNull(table.getColumn("monies"));
+		Assert.assertNull(table.getColumn("badIdentifier"));
+		
+		ColumnDefinition def = new ColumnDefinition();
+		def.setName("monies");
+		def.setDbType(Types.NVARCHAR);
+		
+		PrimaryKeyConstraint pk = new PrimaryKeyConstraint();
+		pk.setName("sample");
+		pk.setFields("id");
+		
+		boolean exceptionCalled = false;
+		try { table.addColumn(def); } catch(RuntimeException e) { exceptionCalled = true; }
+		Assert.assertTrue(exceptionCalled);
+		exceptionCalled = false;
+		
+		try { table.addConstraint(pk); } catch(RuntimeException e) { exceptionCalled = true; }
+		Assert.assertTrue(exceptionCalled);
+		
+		ColumnDefinition def1 = new ColumnDefinition();
+		def1.setName("monies1");
+		def1.setDbType(Types.NVARCHAR);
+		
+		ColumnDefinition def2 = new ColumnDefinition();
+		def2.setName("monies2");
+		def2.setDbType(Types.NVARCHAR);
+		
+		table.addColumns(new ColumnDefinition[] { def1, def2 });
+		
+		Assert.assertNotNull(table.getColumn("monies1"));
+		Assert.assertNotNull(table.getColumn("monies2"));
+		
+		table.removeColumn("monies1");
+		table.removeColumn("monies2");
+		
+		Assert.assertNull(table.getColumn("monies1"));
+		Assert.assertNull(table.getColumn("monies2"));
+	}
 }

@@ -97,18 +97,4 @@ public class TableDefinition extends DatabaseObjectDefinition {
 		constraints.values().toArray(results);
 		return results;
 	}
-	
-	/* Foriegn Key Methods */
-    public void addForeignKeyConstraint(
-    		String name, 
-    		String sourceField,
-    		String targetSchema,
-    		String targetField, 
-    		String targetTable) {
-        ForeignKeyConstraint foreignKey = new ForeignKeyConstraint(
-        		name, 
-        		sourceField, 
-        		targetSchema, targetField, targetTable);
-        addConstraint(foreignKey);
-    }
 }
