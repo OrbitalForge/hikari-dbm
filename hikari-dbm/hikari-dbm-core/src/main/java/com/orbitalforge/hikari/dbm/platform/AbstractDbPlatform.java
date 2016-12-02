@@ -257,7 +257,7 @@ public abstract class AbstractDbPlatform {
     			escapeIdentifier(column)));
     }
     
-    private Writer writeDefaults(Writer writer, Iterator<ColumnDefinition> defs) throws IOException, DbTypeNotMappedException {
+    public Writer writeDefaults(Writer writer, Iterator<ColumnDefinition> defs) throws IOException, DbTypeNotMappedException, MissingParameterException {
     	boolean and = false;
     	while(defs.hasNext()) {
     		ColumnDefinition def = defs.next();
@@ -273,7 +273,7 @@ public abstract class AbstractDbPlatform {
     	return writer;
 	}
     
-    private void writeDefault(ColumnDefinition column, Writer writer) throws IOException {
+    public Writer writeDefault(ColumnDefinition column, Writer writer) throws IOException, MissingParameterException {
     	/*
     	 	MySQL:
 			ALTER TABLE Persons ALTER City SET DEFAULT 'SANDNES'
@@ -287,11 +287,13 @@ public abstract class AbstractDbPlatform {
     	// MSSQL, Oracle and MariaDb do not support named constraints for default - this is exclusively MSSQL
     	// Fun fact - MSSQL does not support the above ALTER TABLE but rather it likes the ADD CONSTRAINT
     	// method of default values ... therefore ... WEIRD!
+    	if(Helpers.isNullOrEmpty(column.getTable())) throw new MissingParameterException("Mssing Table Name");
     	writeAlterColumn(column.getSchema(), column.getTable(), column.getName(), "ALTER COLUMN", writer);
     	String defaultValue = convertDefaultValue(column.getDefaultValue());
     	writer.write("SET DEFAULT ");
     	writer.write(defaultValue);
     	writer.write(";");
+    	return writer;
     }
 
 	private String joinAndEscape(String delim, String... idents) {

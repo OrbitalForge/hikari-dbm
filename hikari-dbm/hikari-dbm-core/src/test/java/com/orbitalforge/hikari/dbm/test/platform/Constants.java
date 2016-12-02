@@ -19,7 +19,12 @@ package com.orbitalforge.hikari.dbm.test.platform;
 public class Constants {
 	public static final String ALTER_TABLE_FK = "ALTER TABLE sSchema.sTable ADD CONSTRAINT FK_fkName FOREIGN KEY (sField) REFERENCES tSchema.tTable(tField);";
 	public static final String ALTER_TABLE_UQ = "ALTER TABLE sSchema.sTable ADD CONSTRAINT UQ_uqName UNIQUE (sField);";
+	public static final String ALTER_TABLE_PK = "ALTER TABLE sSchema.sTable ADD CONSTRAINT PK_pkName PRIMARY KEY (sField);";
 	public static final String BASIC_COLUMN = "\"TEST\" nvarchar(MAX) NOT NULL";
+	public static final String COLUMN_NULL_DEFAULT = "ALTER TABLE sSchema.sTable ALTER COLUMN TEST SET DEFAULT NULL;";
+	public static final String COLUMN_BASIC_DEFAULT = "ALTER TABLE sSchema.sTable ALTER COLUMN TEST SET DEFAULT 'String Value';";
+	public static final String COLUMN_NUMERIC_DEFAULT = "ALTER TABLE sSchema.sTable ALTER COLUMN TEST SET DEFAULT 15.0;";
+	public static final String COLUMN_FUNC_DEFAULT = "ALTER TABLE sSchema.sTable ALTER COLUMN TEST SET DEFAULT TIMESTAMP;";
 	public static final String[] BASIC_TABLE = new String[] { 
 		"CREATE TABLE account ( ",
 		"id bigint NOT NULL, ",

@@ -18,12 +18,12 @@ package com.orbitalforge.hikari.dbm.test.platform;
 
 import org.testng.annotations.Test;
 import org.testng.Assert;
-import org.testng.AssertJUnit;
 import java.io.StringWriter;
 
 import com.orbitalforge.hikari.dbm.exception.MissingParameterException;
 import com.orbitalforge.hikari.dbm.exception.UnknownConstraintException;
 import com.orbitalforge.hikari.dbm.schemaframework.ForeignKeyConstraint;
+import com.orbitalforge.hikari.dbm.schemaframework.PrimaryKeyConstraint;
 import com.orbitalforge.hikari.dbm.schemaframework.UniqueConstraint;
 
 public class ConstraintGenerationTest extends GeneratorTest {
@@ -45,17 +45,17 @@ public class ConstraintGenerationTest extends GeneratorTest {
 		} 
 		catch (MissingParameterException ex) {}	
 		
-		AssertJUnit.assertEquals(null, g.getTable());
+		Assert.assertEquals(null, g.getTable());
 		g.setTable("sTable");
-		AssertJUnit.assertEquals("sTable", g.getTable());
+		Assert.assertEquals("sTable", g.getTable());
 		
-		AssertJUnit.assertEquals("", g.getSchema());
+		Assert.assertEquals("", g.getSchema());
 		try { platform.writeConstraint(g, new StringWriter()); }
 		catch(UnknownConstraintException e ) { }
 		
-		AssertJUnit.assertEquals("", g.getSchema());
+		Assert.assertEquals("", g.getSchema());
 		g.setSchema("sSchema");		
-		AssertJUnit.assertEquals("sSchema", g.getSchema());
+		Assert.assertEquals("sSchema", g.getSchema());
 	}
 	
 	@Test
@@ -82,15 +82,15 @@ public class ConstraintGenerationTest extends GeneratorTest {
 						"sField", 
 						"tSchema", "tTable", "tField");
 		
-		AssertJUnit.assertEquals("sField", fk.getField());
-		AssertJUnit.assertEquals("tSchema", fk.getTargetSchema());
-		AssertJUnit.assertEquals("tTable", fk.getTargetTable());
-		AssertJUnit.assertEquals("tField", fk.getTargetField());
+		Assert.assertEquals("sField", fk.getField());
+		Assert.assertEquals("tSchema", fk.getTargetSchema());
+		Assert.assertEquals("tTable", fk.getTargetTable());
+		Assert.assertEquals("tField", fk.getTargetField());
 		
 		fk.setSchema("sSchema");
 		fk.setTable("sTable");
 		
-		AssertJUnit.assertEquals(Constants.ALTER_TABLE_FK, platform.writeConstraint(fk, new StringWriter()).toString());
+		Assert.assertEquals(Constants.ALTER_TABLE_FK, platform.writeConstraint(fk, new StringWriter()).toString());
 	}
 	
 	@Test
@@ -105,6 +105,21 @@ public class ConstraintGenerationTest extends GeneratorTest {
 		catch(MissingParameterException e ) { }
 		uq.setFields("sField");
 		
-		AssertJUnit.assertEquals(Constants.ALTER_TABLE_UQ, platform.writeConstraint(uq, new StringWriter()).toString());
+		Assert.assertEquals(Constants.ALTER_TABLE_UQ, platform.writeConstraint(uq, new StringWriter()).toString());
+	}
+	
+	@Test
+	public void test_writePrimaryKeyConstraint() throws Exception {
+		platform.setIdentifierFormat("%s");
+		PrimaryKeyConstraint pk = new PrimaryKeyConstraint();
+		pk.setName("pkName");
+		pk.setSchema("sSchema");
+		pk.setTable("sTable");
+		
+		try { platform.writeConstraint(pk, new StringWriter()); }
+		catch(MissingParameterException e ) { }
+		pk.setFields("sField");
+		
+		Assert.assertEquals(Constants.ALTER_TABLE_PK, platform.writeConstraint(pk, new StringWriter()).toString());
 	}
 }

@@ -13,6 +13,7 @@ import org.testng.annotations.Test;
 
 import com.orbitalforge.hikari.dbm.exception.DbTypeNotMappedException;
 import com.orbitalforge.hikari.dbm.exception.HikariDbmException;
+import com.orbitalforge.hikari.dbm.exception.MissingParameterException;
 import com.orbitalforge.hikari.dbm.schemaframework.ColumnDefinition;
 
 public class ColumnGenerationTest extends GeneratorTest {
@@ -137,5 +138,32 @@ public class ColumnGenerationTest extends GeneratorTest {
 		test_dbTypeValue(Types.BLOB, "blob");
 		test_dbTypeValue(Types.CLOB, "clob");
 		test_dbTypeValue(Types.NCLOB, "nclob");
+	}
+	
+	@Test
+	public void test_columnDefaultValue() throws HikariDbmException, IOException {
+		platform.setIdentifierFormat("%s");
+		ColumnDefinition column = new ColumnDefinition();
+		column.setName("TEST");
+		column.setDbType(Types.NVARCHAR);
+		
+		boolean exception_thrown = false;
+		try { platform.writeDefault(column, new StringWriter()).toString(); } 
+		catch (MissingParameterException e) { exception_thrown = true; }
+		Assert.assertEquals(exception_thrown, true, "Expected a MissingParameterException");
+		
+		column.setTable("sTable");
+		column.setSchema("sSchema");
+		
+		Assert.assertEquals(platform.writeDefault(column, new StringWriter()).toString(), Constants.COLUMN_NULL_DEFAULT);
+		
+		column.setDefaultValue("'String Value'");
+		Assert.assertEquals(platform.writeDefault(column, new StringWriter()).toString(), Constants.COLUMN_BASIC_DEFAULT);
+		
+		column.setDefaultValue(15.0);
+		Assert.assertEquals(platform.writeDefault(column, new StringWriter()).toString(), Constants.COLUMN_NUMERIC_DEFAULT);
+		
+		column.setDefaultValue("TIMESTAMP");
+		Assert.assertEquals(platform.writeDefault(column, new StringWriter()).toString(), Constants.COLUMN_FUNC_DEFAULT);
 	}
 }
