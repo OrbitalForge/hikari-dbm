@@ -121,5 +121,11 @@ public class TableGenerationTest extends GeneratorTest {
 		
 		table.setSchema("test_value");
 		Assert.assertEquals(table.getSchema(), "test_value");
+		
+		data.clear();
+		table = new TableDefinition(data);
+		Assert.assertNull(table.getName());
+		// Schema is not always present so it should not impact the downstream identifier joins.
+		Assert.assertEquals(table.getSchema(), "");
 	}
 }

@@ -16,15 +16,8 @@ package com.orbitalforge.hikari.dbm.schemaframework;
  * limitations under the License.
  */
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import com.orbitalforge.hikari.dbm.db.Helpers;
-import com.orbitalforge.hikari.dbm.exception.HikariDbmException;
-import com.orbitalforge.hikari.dbm.platform.AbstractDbPlatform;
 
 public class TableDefinition extends DatabaseObjectDefinition {
 	private final Map<String, ColumnDefinition> columns = new LinkedHashMap<String, ColumnDefinition>();

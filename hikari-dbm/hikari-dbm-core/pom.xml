@@ -49,12 +49,6 @@
 		</dependency>
 
 		<!-- Misc -->
-		<!-- TODO: Remove this and replace with a simple Stream to String function -->
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.5</version>
-		</dependency>
 
 		<!-- Testing -->
 		<dependency>

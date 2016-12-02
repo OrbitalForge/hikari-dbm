@@ -19,8 +19,6 @@ package com.orbitalforge.hikari.dbm.db;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.io.IOUtils;
-
 public class AbstractDbQueries {
 	public static final String GET_TABLES;
 	public static final String GET_TABLE_SINGLE;
@@ -32,19 +30,19 @@ public class AbstractDbQueries {
 		GET_TABLE_COLUMNS = loadResourceToString("queries/tableColumnsQuery.sql");
 	}
 	
-	@SuppressWarnings("deprecation")
-	public static String loadResourceToString(final String path){
+	public static String loadResourceToString(final String path) {
 	    final InputStream stream =
 	        Thread
 			    .currentThread()
 			    .getContextClassLoader()
 			    .getResourceAsStream(path);
-	    try{
-	        return IOUtils.toString(stream);
-	    } catch(final IOException e){
-	        throw new IllegalStateException(e);
-	    } finally{
-	        IOUtils.closeQuietly(stream);
-	    }
+	    
+		try {
+			String result = Helpers.toString(stream);
+			stream.close();
+			return result;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

@@ -8,8 +8,6 @@ import java.sql.Types;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -18,9 +16,6 @@ import com.orbitalforge.hikari.dbm.exception.HikariDbmException;
 import com.orbitalforge.hikari.dbm.schemaframework.ColumnDefinition;
 
 public class ColumnGenerationTest extends GeneratorTest {
-	private static final Logger logger = 
-	        LoggerFactory.getLogger(ConstraintGenerationTest.class);
-	
 	@Test
 	public void test_baseColumnGenerationExceptions() throws HikariDbmException, IOException {
 		Writer writer = new StringWriter();

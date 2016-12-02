@@ -18,16 +18,11 @@ package com.orbitalforge.hikari.dbm.db;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Properties;
 
 import javax.sql.DataSource;
 
 import com.orbitalforge.hikari.dbm.platform.AbstractDbPlatform;
-import com.orbitalforge.hikari.dbm.platform.H2Platform;
 import com.orbitalforge.hikari.dbm.schemaframework.SchemaManager;
 import com.zaxxer.hikari.HikariDataSource;
 
