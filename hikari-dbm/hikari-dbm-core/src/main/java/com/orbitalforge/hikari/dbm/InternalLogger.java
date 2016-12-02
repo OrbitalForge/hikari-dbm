@@ -1,8 +1,6 @@
 package com.orbitalforge.hikari.dbm;
 
 import java.sql.PreparedStatement;
-import java.sql.Statement;
-
 import org.slf4j.Logger;
 
 import com.orbitalforge.hikari.dbm.db.Helpers;
@@ -16,16 +14,10 @@ public final class InternalLogger {
 			log.trace(Helpers.EOL + statement.toString());
 		}
 	}
-	
-	public static void logSqlStatement(Logger log, PreparedStatement statement) {
-		if(log.isTraceEnabled()) {
-			log.trace(Helpers.EOL + statement.toString());
-		}
-	}
 
-	public static void logSqlStatement(Logger log, Statement statement) {
+	public static void logSqlStatement(Logger log, Object object) {
 		if(log.isTraceEnabled()) {
-			log.trace(Helpers.EOL + statement.toString());
+			log.trace(Helpers.EOL + object.toString());
 		}
 	}
 }

@@ -60,7 +60,7 @@ public class TableGenerationTest extends GeneratorTest {
 	@Test
 	public void test_standardTableGeneration() throws HikariDbmException, IOException {
 		platform.setIdentifierFormat("%s");
-		String[] lines = platform.writeTable(createSampleTable(), new StringWriter()).toString().split(Helpers.EOL);
+		String[] lines = platform.writeCreateTable(createSampleTable(), new StringWriter()).toString().split(Helpers.EOL);
 		Assert.assertArrayEquals(lines, Constants.BASIC_TABLE);
 	}
 	

@@ -47,11 +47,13 @@ public class SchemaManager {
 	}
 	
 	public void createTable(TableDefinition table) throws HikariDbmException, IOException, SQLException {
-		Writer writer = dbService.getPlatform().writeTable(table, new StringWriter());
+		Writer writer = dbService.getPlatform().writeCreateTable(table, new StringWriter());
 		Connection connection = dbService.getDataSource().getConnection();
 		Statement statement = connection.createStatement();
+		InternalLogger.logSqlStatement(LOG, writer);
+		
 		try {
-		statement.execute(writer.toString());
+			statement.execute(writer.toString());
 		} finally {
 			statement.close();
 			connection.close();
@@ -98,6 +100,7 @@ public class SchemaManager {
 		Connection connection = dbService.getDataSource().getConnection();
 		NamedParameterStatement nps = new NamedParameterStatement(connection, AbstractDbQueries.GET_TABLE_SINGLE);
 		addNamedParameters(dbService, connection, nps);
+		InternalLogger.logSqlStatement(LOG, nps);
 		
 		// Set Query Params
 		nps.setString("schema", schema);
@@ -121,6 +124,7 @@ public class SchemaManager {
 		Connection connection = dbService.getDataSource().getConnection();
 		NamedParameterStatement nps = new NamedParameterStatement(connection, AbstractDbQueries.GET_TABLE_COLUMNS);
 		addNamedParameters(dbService, connection, nps);
+		InternalLogger.logSqlStatement(LOG, nps);
 		
 		// Set Query Params
 		nps.setString("schema", schema);

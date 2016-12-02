@@ -163,7 +163,7 @@ public abstract class AbstractDbPlatform {
 		return writer;
 	}
 
-	public Writer writeTable(TableDefinition table, Writer writer) throws HikariDbmException, IOException {
+	public Writer writeCreateTable(TableDefinition table, Writer writer) throws HikariDbmException, IOException {
 		writer.write("CREATE TABLE ");
 		// TODO: Add schema prefix ...
 		writer.write(joinIdentifiers(table.getTableName()));
