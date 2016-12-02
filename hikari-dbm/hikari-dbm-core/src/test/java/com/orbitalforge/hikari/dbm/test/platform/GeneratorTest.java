@@ -16,24 +16,15 @@ package com.orbitalforge.hikari.dbm.test.platform;
  * limitations under the License.
  */
 
-import com.orbitalforge.hikari.dbm.platform.AbstractDbPlatform;
 
-public class GenericPlatform extends AbstractDbPlatform {
-	@Override
-	public void setup() {
-	}
+import org.testng.annotations.BeforeMethod;
+
+public abstract class GeneratorTest {
+	protected GenericPlatform platform;
 	
-	public void setIdentifierFormat(String format) {
-		this.identifierFormat = format;
+	@BeforeMethod
+	protected void setUp() {
+		platform = new GenericPlatform();
+		platform.setIdentifierFormat("\"%s\"");
 	}
-
-	@Override
-	protected boolean supportsDefaultConstraint() {
-		return false;
-	}
-
-	public boolean isTypeMapped(int int1) {
-		return (getColumnType(int1) != null);
-	}
-	
 }

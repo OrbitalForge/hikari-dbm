@@ -100,7 +100,7 @@ public abstract class AbstractDbPlatform {
 		registerColumnType(Types.SMALLINT, "smallint");
 		registerColumnType(Types.INTEGER, "integer");
 		registerColumnType(Types.BIGINT, "bigint");
-		registerColumnType(Types.FLOAT, "float($p)");
+		registerColumnType(Types.FLOAT, "float(%p)");
 		registerColumnType(Types.DECIMAL, "decimal(%p,%s)");
 		registerColumnType(Types.DOUBLE, "double precision");
 		registerColumnType(Types.NUMERIC, "numeric(%p,%s)");
@@ -135,7 +135,7 @@ public abstract class AbstractDbPlatform {
 		return template.replaceAll(param, value);
 	}
 
-	protected void writeDbType(ColumnDefinition column, Writer writer) throws DbTypeNotMappedException, IOException {
+	public Writer writeDbType(ColumnDefinition column, Writer writer) throws DbTypeNotMappedException, IOException {
 		String typeTemplate = getColumnType(column.getDbType());
 		if (typeTemplate == null)
 			throw new DbTypeNotMappedException();
@@ -145,9 +145,13 @@ public abstract class AbstractDbPlatform {
 		typeTemplate = renderTemplate(typeTemplate, "%p", Integer.toString(column.getPrecision()));
 		typeTemplate = renderTemplate(typeTemplate, "%s", Integer.toString(column.getScale()));
 		writer.write(typeTemplate);
+		return writer;
 	}
 
-	private Writer writeColumn(ColumnDefinition column, Writer writer) throws HikariDbmException, IOException {
+	public Writer writeColumn(ColumnDefinition column, Writer writer) throws HikariDbmException, IOException {
+		if(Helpers.isNullOrEmpty(column.getName())) throw new MissingParameterException("The name is not set for this column");
+		if(column.getDbType() == -1) throw new MissingParameterException("The column type is not set for " + column.getName());
+		
 		writer.write(this.escapeIdentifier(column.getName()));
 		writer.write(" ");
 		writeDbType(column, writer);
@@ -212,12 +216,13 @@ public abstract class AbstractDbPlatform {
     	boolean and = false;
     	while(defs.hasNext()) {
     		ColumnDefinition def = defs.next();
-    		
-    		if(and) {
-    			writer.write(Helpers.EOL);
-    		} else { and = true; }
-    		
-    		if(def.getIsAutoIncrement()) writeAutoIncrement(def, writer);
+    		if(def.getIsAutoIncrement()) {
+	    		if(and) {
+	    			writer.write(Helpers.EOL);
+	    		} else { and = true; }
+	    		
+	    		writeAutoIncrement(def, writer);
+    		}
     	}
     	
     	return writer;
@@ -256,12 +261,13 @@ public abstract class AbstractDbPlatform {
     	boolean and = false;
     	while(defs.hasNext()) {
     		ColumnDefinition def = defs.next();
-    		
-    		if(and) {
-    			writer.write(Helpers.EOL);
-    		} else { and = true; }
-    		
-    		if(def.getDefaultValue() != null) writeDefault(def, writer);
+    		if(def.getDefaultValue() != null) {
+	    		if(and) {
+	    			writer.write(Helpers.EOL);
+	    		} else { and = true; }
+	    		
+	    		writeDefault(def, writer);
+    		}
     	}
     	
     	return writer;

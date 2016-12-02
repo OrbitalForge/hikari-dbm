@@ -63,7 +63,7 @@ public class ColumnDefinition extends DatabaseObjectDefinition {
 	public boolean getIsNullable() { return getProperty("isNullable", false); }
 	public void setIsNullable(boolean value) { setProperty("isNullable", value); }
 	
-	public int getDbType() { return (Integer) properties.get("dbType"); }
+	public int getDbType() { return getProperty("dbType", -1); }
 	public void setDbType(int type) { setProperty("dbType", type); }
 	
 	public long getLength() { return getProperty("length", 0L); }
