@@ -18,6 +18,7 @@ package com.orbitalforge.hikari.dbm.test.platform;
 
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
+import org.testng.Assert;
 import org.testng.AssertJUnit;
 import java.io.StringWriter;
 
@@ -60,6 +61,21 @@ public class ConstraintGenerationTest extends GeneratorTest {
 		AssertJUnit.assertEquals("", g.getSchema());
 		g.setSchema("sSchema");		
 		AssertJUnit.assertEquals("sSchema", g.getSchema());
+	}
+	
+	@Test
+	public void test_genericConstraintPrefix() {
+		GenericConstraint g = new GenericConstraint();
+		g.setName("test0");
+		Assert.assertEquals(g.getConstraintIdentifier(), "GENERIC_test0");
+		g.setName("generic_test1");
+		Assert.assertEquals(g.getConstraintIdentifier(), "generic_test1");
+		
+		g.setName("gEnErIc_test2");
+		Assert.assertEquals(g.getConstraintIdentifier(), "gEnErIc_test2");
+		
+		g.setName("gen_prefix_test3");
+		Assert.assertEquals(g.getConstraintIdentifier(), "gen_prefix_test3");
 	}
 	
 	@Test

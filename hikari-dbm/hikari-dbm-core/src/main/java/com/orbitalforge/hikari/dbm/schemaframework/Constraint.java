@@ -25,9 +25,17 @@ public abstract class Constraint extends DatabaseObjectDefinition {
 	public String getTable() { return getProperty("table"); }
 	public void setTable(String value) { setProperty("table", value); }
 	
+	private String getNamePrefix() {
+		return getName().split("_")[0];
+	}
+	
+	private boolean hasPrefix() {
+		return (getNamePrefix().toLowerCase() != getName());
+	}
+	
 	public String getConstraintIdentifier() {
-		// If the constraint already has its identifier added in.
-		if(getName().toLowerCase().substring(0, 3) == getConstraintType().toLowerCase() + "_") return getName();
-		return String.format("%s_%s", getConstraintType(), getName()).toUpperCase();
+		// If the constraint already has a prefix added, just return the name
+		if(hasPrefix()) return getName();
+		return String.format("%s_%s", getConstraintType(), getName());
 	}
 }
