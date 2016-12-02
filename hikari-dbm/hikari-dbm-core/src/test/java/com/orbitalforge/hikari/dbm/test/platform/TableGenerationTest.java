@@ -3,6 +3,8 @@ package com.orbitalforge.hikari.dbm.test.platform;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.sql.Types;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.testng.annotations.Test;
@@ -103,5 +105,21 @@ public class TableGenerationTest extends GeneratorTest {
 		
 		Assert.assertNull(table.getColumn("monies1"));
 		Assert.assertNull(table.getColumn("monies2"));
+	}
+	
+	@Test
+	public void test_otherCodeCoverage() {
+		platform.setIdentifierFormat("%s");
+		
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("table_name", "_table_name");
+		data.put("table_schema", "_table_schema");
+		
+		TableDefinition table = new TableDefinition(data);
+		Assert.assertEquals(table.getName(), "_table_name");
+		Assert.assertEquals(table.getSchema(), "_table_schema");
+		
+		table.setSchema("test_value");
+		Assert.assertEquals(table.getSchema(), "test_value");
 	}
 }
