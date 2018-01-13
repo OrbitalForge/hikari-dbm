@@ -1,7 +1,7 @@
 # hikari-dbm
-[![Build Status](https://travis-ci.org/OrbitalForge/hikari-dbm.svg?branch=master)](https://travis-ci.org/OrbitalForge/hikari-dbm)
-[![codebeat badge](https://codebeat.co/badges/3f047966-1c6a-4b0f-bb53-7fa1abe02c29)](https://codebeat.co/projects/github-com-orbitalforge-hikari-dbm)
-[![codecov.io badge](https://codecov.io/gh/OrbitalForge/hikari-dbm/master.svg)](https://codecov.io/gh/OrbitalForge/hikari-dbm/master.svg)
+[![Build Status](https://travis-ci.org/tsharp/hikari-dbm.svg?branch=master)](https://travis-ci.org/tsharp/hikari-dbm)
+[![codebeat badge](https://codebeat.co/badges/3f047966-1c6a-4b0f-bb53-7fa1abe02c29)](https://codebeat.co/projects/github-com-tsharp-hikari-dbm-master)
+[![codecov.io badge](https://codecov.io/gh/tsharp/hikari-dbm/master.svg)](https://codecov.io/gh/tsharp/hikari-dbm)
 hikari-dbm is intended to provide a framework for building scalable applications 
 hence Database Management (dbm). The other intent is to provide a light-weight 
 mapping framework. ORM refers to this as dynamic mapping but I prefer to call it "I need my data".
