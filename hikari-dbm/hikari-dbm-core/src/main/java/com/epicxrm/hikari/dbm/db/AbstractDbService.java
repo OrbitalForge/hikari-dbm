@@ -64,6 +64,7 @@ public class AbstractDbService {
         /* Setup Schema Manager */
         schemaManager = new SchemaManager(this);
 	}
+	
 	private Properties loadProperties(String file) {
 		return loadResourceToProperties(file);
 	}

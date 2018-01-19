@@ -63,4 +63,9 @@ public class H2Platform extends AbstractDbPlatform {
 	protected boolean supportsDefaultConstraint() {
 		return false;
 	}
+	
+	@Override
+	public String writeCreateSchema(String schema) {
+		return String.format("CREATE SCHEMA IF NOT EXISTS %s", this.escapeIdentifier(schema));
+	}
 }

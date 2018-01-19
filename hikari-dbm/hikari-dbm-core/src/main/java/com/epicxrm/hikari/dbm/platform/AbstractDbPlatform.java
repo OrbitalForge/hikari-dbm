@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.epicxrm.hikari.dbm.db.Helpers;
+import com.epicxrm.hikari.dbm.db.SqlTypeMap;
 import com.epicxrm.hikari.dbm.exception.DbTypeNotMappedException;
 import com.epicxrm.hikari.dbm.exception.HikariDbmException;
 import com.epicxrm.hikari.dbm.exception.MissingParameterException;
@@ -41,8 +42,9 @@ import com.epicxrm.hikari.dbm.schemaframework.UniqueConstraint;
 
 public abstract class AbstractDbPlatform {
 	private Map<Integer, String> columnTypeMap = new HashMap<Integer, String>();
+	private Map<Class<?>, Integer> classTypeMap = new HashMap<Class<?>, Integer>();
 	protected String identifierFormat = "\"%s\"";
-	
+
 	public String escapeIdentifier(String identifier) {
 		if(identifier == null) return "";
 		String cleaned = identifier.replaceAll("\"", "").replaceAll("\'", "");
@@ -83,6 +85,23 @@ public abstract class AbstractDbPlatform {
 		this.columnTypeMap.remove(type);
 	}
 	
+	public Integer getClassType(Class<?> clazz) {
+		// NOTE: Possible performance bottleneck
+		if(this.classTypeMap.containsKey(clazz)) {
+			return this.classTypeMap.get(clazz);
+		}
+		
+		return SqlTypeMap.fromClass(clazz);
+	}
+	
+	public void registerClassType(Class<?> clazz, int dbType) {
+		this.classTypeMap.put(clazz, dbType);
+	}
+	
+	protected void unregisterClassType(int type) {
+		this.columnTypeMap.remove(type);
+	}
+	
 	/**
 	 * This will clear out the column type registry. This is needed when the
 	 * platform implementation overrides all types.
@@ -91,7 +110,7 @@ public abstract class AbstractDbPlatform {
 		this.columnTypeMap.clear();
 	}
 	
-	private void internalSetup() {
+	private void internalSetup() {		
 		// Borrowed from
 		// https://github.com/hibernate/hibernate-orm/blob/master/hibernate-core/src/main/java/org/hibernate/dialect/Dialect.java
 		registerColumnType(Types.BIT, "bit");
@@ -105,7 +124,7 @@ public abstract class AbstractDbPlatform {
 		registerColumnType(Types.DOUBLE, "double precision");
 		registerColumnType(Types.NUMERIC, "numeric(%p,%s)");
 		registerColumnType(Types.REAL, "real");
-
+		
 		registerColumnType(Types.DATE, "date");
 		registerColumnType(Types.TIME, "time");
 		registerColumnType(Types.TIMESTAMP, "timestamp");
@@ -166,7 +185,7 @@ public abstract class AbstractDbPlatform {
 	public Writer writeCreateTable(TableDefinition table, Writer writer) throws HikariDbmException, IOException {
 		writer.write("CREATE TABLE ");
 		// TODO: Add schema prefix ...
-		writer.write(joinIdentifiers(table.getTableName()));
+		writer.write(joinIdentifiers(table.getSchemaName(), table.getTableName()));
 		writer.write(" ( ");
 		writer.write(Helpers.EOL);
 
@@ -249,7 +268,7 @@ public abstract class AbstractDbPlatform {
     	writer.write(" AUTO_INCREMENT;");
 	}
     
-    private void writeAlterColumn(String schema, String table, String column, String type, Writer writer) throws IOException {
+    protected void writeAlterColumn(String schema, String table, String column, String type, Writer writer) throws IOException {
     	writer.write(String.format(
     			"ALTER TABLE %s %s %s ", 
     			joinIdentifiers(schema, table),
@@ -389,6 +408,8 @@ public abstract class AbstractDbPlatform {
 
 	protected abstract boolean supportsDefaultConstraint();
 
+	public abstract String writeCreateSchema(String schema);
+	
 	private String convertDefaultValue(Object defaultValue) {
 		if(defaultValue == null) return "NULL";
 		if(defaultValue instanceof Number) return defaultValue.toString();

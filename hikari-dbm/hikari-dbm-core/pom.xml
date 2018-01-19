@@ -11,8 +11,7 @@
 	<artifactId>hikari-dbm-core</artifactId>
 	<name>hikari-dbm-core</name>
 	<description>Light Database Manager or Lite Database Mapping ... or Lite dBm</description>
-	<version>0.0.1-SNAPSHOT</version>
-	
+
 	<dependencies>
 		<!-- Logging -->
 		<dependency>

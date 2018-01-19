@@ -148,6 +148,37 @@ public class SchemaManager {
 		return columns;
 	}
 
-	public void updateTable(TableDefinition createSampleTable) {
+	/**
+	 * Updates a table definition
+	 * TODO: Implement
+	 * @param createSampleTable
+	 * @throws SQLException 
+	 * @throws IOException 
+	 * @throws HikariDbmException 
+	 */
+	public void upsertTable(TableDefinition tableDefinition) throws SQLException, HikariDbmException, IOException {
+		TableDefinition existingDefinition = getTable(tableDefinition.getSchemaName(), tableDefinition.getTableName());
+		
+		if(existingDefinition == null) {
+			LOG.trace("Create Table");
+			createTable(tableDefinition);
+			return;
+		}
+		
+		LOG.trace("Table Exists - TODO: Implement Update Methods");
+		
+		// TODO: Calculate table delta
+	}
+
+	public boolean createSchema(String schema) throws SQLException {
+		Connection connection = dbService.getDataSource().getConnection();
+		String schemaStatement = dbService.getPlatform().writeCreateSchema(schema);
+		Statement statement = connection.createStatement();
+		boolean result = statement.execute(schemaStatement);
+		
+		statement.close();
+		connection.close();
+		
+		return result;
 	}
 }

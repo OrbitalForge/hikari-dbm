@@ -18,6 +18,8 @@ package com.epicxrm.hikari.dbm.platform;
 
 import java.sql.Types;
 
+import javax.management.RuntimeErrorException;
+
 public class MariaDbPlatform extends AbstractDbPlatform{
 	@Override
 	public void setup() {
@@ -29,5 +31,10 @@ public class MariaDbPlatform extends AbstractDbPlatform{
 	@Override
 	protected boolean supportsDefaultConstraint() {
 		return false;
+	}
+
+	@Override
+	public String writeCreateSchema(String schema) {
+		throw new RuntimeException("Schemas are unsupported in the MariaDb platform.");
 	}
 }
