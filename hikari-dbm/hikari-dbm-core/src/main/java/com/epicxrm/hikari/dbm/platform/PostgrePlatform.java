@@ -42,6 +42,12 @@ public class PostgrePlatform extends AbstractDbPlatform {
 	}
 
 	@Override
+	protected boolean shouldEscape(String identifier) {
+		// TODO: Detect keywords
+		return false;
+	}
+	
+	@Override
 	protected boolean supportsDefaultConstraint() {
 		return true;
 	}

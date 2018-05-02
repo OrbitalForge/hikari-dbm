@@ -45,11 +45,20 @@ public abstract class AbstractDbPlatform {
 	private Map<Class<?>, Integer> classTypeMap = new HashMap<Class<?>, Integer>();
 	protected String identifierFormat = "\"%s\"";
 
+	protected boolean shouldEscape(String identifier) {
+		return true;
+	}
+	
 	public String escapeIdentifier(String identifier) {
 		if(identifier == null) return "";
 		String cleaned = identifier.replaceAll("\"", "").replaceAll("\'", "");
 		if(cleaned == "") return cleaned;
-		return String.format(identifierFormat, cleaned);
+		
+		if(shouldEscape(identifier)) {
+			return String.format(identifierFormat, cleaned);
+		}
+		
+		return cleaned;
 	}
 
 	public String joinIdentifiers(String... identifiers) {
